@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--4-col">
+            <b>
+                <h4>    
+                    <h:outputLabel value="#{materialBean.qtdMaterial}"
+                                   style="margin-left: 75px;font-size: 25pt;"/>
+                    materiais cadastrados!
+                </h4>
+            </b>
+        </div>
+        <div class="mdl-cell mdl-cell--8-col">
+            <h:form>
+                <h1>Adicionar um material</h1>
+                <p:panelGrid columns="2">
+                    <b>Nome:</b>
+                    <p:inputText value="#{ materialBean.material.nome }" id="nome" 
+                                 style="width: 420px;" maxlength="255" required="true"/>
+                    <b>Quantidade:</b>
+                    <p:spinner value="#{ materialBean.material.quantidade }" id="quantidade"
+                               min="0" required="true"/>
+                    <b>Descrição:</b>
+                    <p:inputTextarea  value="#{ materialBean.material.descricao }" id="descricao"
+                                      rows="6" cols="60" maxlength="255" required="true"/>
+                    <p:outputLabel for="tipo" value="Tipo: " style="color: rgb(244,67,54)" />
+                    <p:selectOneButton id="tipo" value="#{ materialBean.material.tipo }"
+                                       required="true">
+                        <f:selectItem itemLabel="Permanente" itemValue="PERMANENTE"/>
+                        <f:selectItem itemLabel="Livro" itemValue="LIVRO"/>
+                        <f:selectItem itemLabel="Diario" itemValue="DIARIO" />
+                        <f:selectItem itemLabel="Armario" itemValue="ARMARIO" />
+                    </p:selectOneButton>
+                    <b>Código:</b>
+                    <p:inputText value="#{ materialBean.material.codigo }" 
+                                 id="codigo" style="width: 420px;"/>
+                </p:panelGrid>
+                <br/>
+                <p:commandButton action="#{ materialBean.adicionar }" 
+                                 value="Adicionar" update="@all"
+                                 title="Adicionar o material ao sistema"
+                                 style="width: 200px;height: 50px;
+                                 font-size: 18pt;left: 180px;">
+                    <p:confirm header="Confirmar" message="Deseja adicionar esse material?" 
+                               icon="ui-icon-alert" />
+                </p:commandButton>
+            </h:form>
+        </div>
+    </div>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="Sim" type="button" 
+                         styleClass="ui-confirmdialog-yes" 
+                         icon="ui-icon-check" />
+        <p:commandButton value="Não" type="button" 
+                         styleClass="ui-confirmdialog-no" 
+                         icon="ui-icon-close" />
+    </p:confirmDialog>
+</ui:composition>

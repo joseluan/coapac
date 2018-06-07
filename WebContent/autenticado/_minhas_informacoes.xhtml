@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <center><h1>Detalhes sobre mim</h1></center>
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col"></div>
+        <div class="mdl-cell mdl-cell--11-col">
+            <h4>
+                <b>Nome:</b> #{usuarioBean.usuario_session.nome} 
+                <b>Matricula:</b> #{usuarioBean.usuario_session.matricula}
+                <b>Acesso:</b> #{usuarioBean.usuario_session.acesso}
+            </h4>
+            <h4>
+                <b>Vinculo:</b> #{usuarioBean.usuario_session.vinculo}
+                <b>Tipo:</b> #{usuarioBean.usuario_session.tipo}
+                <b>Limite de cópias:</b> #{usuarioBean.usuario_session.quantidade_copia}
+            </h4>
+        </div>
+    </div> 
+    <h:panelGroup rendered="#{ not empty emprestimoBean.meusEmprestimos }">
+        <center><h3>Ultimas 20 solicitações</h3></center>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col" >
+                <p:dataTable value="#{ emprestimoBean.meusEmprestimos }" var="emprestimo" sortMode="multiple" 
+                             id="lista_emprestimo">
+                    <p:column headerText="Situação" sortBy="#{emprestimo.situacao}" width="110">
+                        <h:outputText value="#{emprestimo.situacao}" />
+                    </p:column>
+                    <p:column headerText="Solicitação" sortBy="#{emprestimo.solicitacao}" width="80">
+                        <h:outputText value="#{emprestimo.solicitacao}" />
+                    </p:column>
+                    <p:column headerText="Código" sortBy="#{emprestimo.material.codigo}" width="120">
+                        <h:outputText value="#{emprestimo.material.codigo}" rendered="#{ not empty emprestimo.material.codigo }" />
+                    </p:column>
+                    <p:column headerText="Nome - Material" sortBy="#{emprestimo.material.nome}">
+                        <h:outputText value="#{emprestimo.material.nome}"/>
+                    </p:column>
+                    <p:column headerText="Matricula - Entrega" sortBy="#{emprestimo.usuario_ent.matricula}">
+                        <h:outputText value="#{emprestimo.usuario_ent.matricula}"/>
+                    </p:column>
+                    <p:column headerText="Nome - Entrega" sortBy="#{emprestimo.usuario_ent.nome}">
+                        <h:outputText value="#{emprestimo.usuario_ent.nome}"/>
+                    </p:column>
+                    <p:column headerText="Matricula - Emprestimo" sortBy="#{emprestimo.usuario_emp.matricula}">
+                        <h:outputText value="#{emprestimo.usuario_emp.matricula}"/>
+                    </p:column>
+                    <p:column headerText="Nome - Emprestimo" sortBy="#{emprestimo.usuario_emp.nome}">
+                        <h:outputText value="#{emprestimo.usuario_emp.nome}"/>
+                    </p:column>
+                    <p:column headerText="Data expiração" sortBy="#{emprestimo.data_expiracao}" width="100">
+                        <h:outputText value="#{formatador.formatarData(emprestimo.data_expiracao)}"/>
+                    </p:column>
+                    <p:column headerText="Data Entrega" sortBy="#{emprestimo.data_entrega}" width="100">
+                        <h:outputText value="#{formatador.formatarData(emprestimo.data_entrega)}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </div>
+    </h:panelGroup>
+    <center>
+        <h3><h:outputLabel value="Ultimas 20 Cópias" rendered="#{not empty copiaBean.minhasCopias }"/></h3>
+        <p:dataTable value="#{ copiaBean.minhasCopias }" var="copia" sortMode="multiple" 
+                     rendered="#{not empty copiaBean.minhasCopias}" style="width: 500px;">
+            <p:column headerText="Quantidade" sortBy="#{copia.quantidade}" width="110">
+                <h:outputText value="#{copia.quantidade}" />
+            </p:column>
+            <p:column headerText="Data da cópia" sortBy="#{copia.data_copia}" width="80">
+                <h:outputText value="#{formatador.formatarData(copia.data_copia)}" />
+            </p:column>
+        </p:dataTable>
+    </center>
+    <br/><br/><br/>
+</ui:composition>

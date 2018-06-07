@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<style>
+.contornoDIV {
+	border: #b71c1c solid 3px;
+	padding: 15px;
+	border-radius: 10px;
+}
+
+.fonteLLISTA {
+	font-size: 14pt;
+}
+</style>
+	<h:panelGroup id="grupo_copias">
+		<div class="mdl-grid">
+			<div class="mdl-cell mdl-cell--7-col">
+				<h3>
+					<h:outputLabel
+						value="Bem vindo(a) #{usuarioBean.usuario_session.nome}" />
+				</h3>
+			</div>
+			<div class="mdl-cell mdl-cell--5-col">
+				<h5>O limite é #{usuarioBean.usuario_session.quantidade_copia}
+					cópias</h5>
+				<h:form>
+					<p:inputNumber value="#{copiaBean.copia.quantidade}" minValue="1"
+						maxValue="#{usuarioBean.usuario_session.quantidade_copia}" />
+					<p:commandButton ajax="false" value="Solicitar cópias"
+						style="margin-left: 5px;" action="#{copiaBean.adicionar}"
+						icon="ui-icon-plus" />
+				</h:form>
+			</div>
+		</div>
+	</h:panelGroup>
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--7-col contornoDIV">
+			<h:panelGroup rendered="#{empty emprestimoBean.listaSolicitacao}">
+				<center>
+					<h3>Você não possui solicitação de material</h3>
+				</center>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not empty emprestimoBean.listaSolicitacao}"
+				id="lista_solicitacoes">
+				<center>
+					<h3>Sua lista das últimas solicitações de materiais</h3>
+				</center>
+				<p:repeat value="#{emprestimoBean.listaSolicitacao}"
+					var="emprestimo">
+					<h:panelGrid columns="6" cellpadding="2">
+						<h:outputText value="Id:" class="fonteLLISTA" />
+						<h:outputText value="#{emprestimo.id}" style="font-weight: bold"
+							class="fonteLLISTA" />
+						<h:outputText value="Nome:" class="fonteLLISTA" />
+						<h:outputText value="#{emprestimo.material.nome}"
+							style="font-weight: bold" class="fonteLLISTA" />
+						<h:outputText value="Nome código:"
+							rendered="#{not empty emprestimo.material.codigo}"
+							class="fonteLLISTA" />
+						<h:outputText rendered="#{not empty emprestimo.material.codigo}"
+							value="#{emprestimo.material.codigo}" style="font-weight: bold"
+							class="fonteLLISTA" />
+					</h:panelGrid>
+					<hr />
+				</p:repeat>
+			</h:panelGroup>
+		</div>
+		<div class="mdl-cell mdl-cell--1-col"></div>
+		<div class="mdl-cell mdl-cell--4-col contornoDIV">
+			<center>
+				<h3>Informações importantes</h3>
+			</center>
+			<h4>
+				<h:outputLabel
+					value="Você possui #{usuarioBean.usuario_session.quantidade_copia} cópias" />
+			</h4>
+			<h:panelGroup rendered="#{empty emprestimoBean.listaExpirado}">
+				<h4>
+					Você <b>NÃO</b> está inadimplente!!
+				</h4>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not empty emprestimoBean.listaExpirado}">
+				<h4 style="color: #b71c1c;">Você está inadimplente!!</h4>
+				<p:repeat value="#{emprestimoBean.listaExpirado}" var="emprestimo">
+					<h:panelGrid columns="6" cellpadding="2">
+						<h:outputText value="Nome:" />
+						<h:outputText value="#{emprestimo.material.nome};"
+							style="font-weight: bold" />
+						<h:outputText value="Nome código:" />
+						<h:outputText rendered="#{not empty emprestimo.material.codigo};"
+							value="#{emprestimo.material.codigo}" style="font-weight: bold" />
+						<h:outputText rendered="#{empty emprestimo.material.codigo};"
+							value="NULL" style="font-weight: bold" />
+						<h:outputText value="Data de expiração:" />
+						<h:outputText
+							value="#{formatador.formatarData(emprestimo.data_expiracao)}"
+							style="font-weight: bold" />
+					</h:panelGrid>
+				</p:repeat>
+			</h:panelGroup>
+		</div>
+	</div>
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--7-col contornoDIV">
+			<center>
+				<h3>
+					<h:outputLabel value="Ultimas cópias feitas"
+						rendered="#{not empty copiaBean.minhasCopiasLimite }" />
+					<h:outputLabel value="Você ainda não solicitou cópias"
+						rendered="#{empty copiaBean.minhasCopiasLimite }" />
+				</h3>
+			</center>
+			<p:repeat value="#{ copiaBean.minhasCopiasLimite }" var="copia"
+				rendered="#{not empty copiaBean.minhasCopiasLimite}">
+				<h:panelGrid columns="6" cellpadding="2">
+					<h:outputText value="Id:" class="fonteLLISTA" />
+					<h:outputText value="#{copia.id}" style="font-weight: bold"
+						class="fonteLLISTA" />
+					<h:outputText value="Quantidade:" class="fonteLLISTA" />
+					<h:outputText value="#{copia.quantidade}" style="font-weight: bold"
+						class="fonteLLISTA" />
+					<h:outputText value="Data de expiração:" class="fonteLLISTA" />
+					<h:outputText value="#{formatador.formatarData(copia.data_copia)}"
+						style="font-weight: bold" class="fonteLLISTA" />
+				</h:panelGrid>
+			</p:repeat>
+		</div>
+	</div>
+	<ui:remove>
+		<div class="mdl-grid">
+			<div class="mdl-cell mdl-cell--12-col">
+				<p:chart type="bar" model="#{chartView.barModel}"
+					style="height:300px" />
+			</div>
+		</div>
+	</ui:remove>
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<p:commandButton value="Sim" type="button"
+			styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		<p:commandButton value="Não" type="button"
+			styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
+</ui:composition>

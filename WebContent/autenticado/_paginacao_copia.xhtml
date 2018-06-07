@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <center>
+        <!-- retornar -->
+        <p:commandButton actionListener="#{ copiaBean.previous}" title="Voltar" value="«"
+                         disabled="#{copiaBean.paginacao.paginaAtual == 0}"
+                         ajax="false"/>
+        <!-- fim retornar -->
+        <p:commandButton action="#{copiaBean.changePage}" value="#{copiaBean.paginacao.paginaAtual}" 
+                         rendered="#{copiaBean.paginacao.paginaAtual > 0}" 
+                         title="Página #{ copiaBean.paginacao.paginaAtual} de #{ copiaBean.paginacao.totalPaginas}"
+                         ajax="false" >
+            <f:param name="pagina" value="#{copiaBean.paginacao.paginaAtual - 1}"/>
+        </p:commandButton>
+        <!-- pagina atual -->
+        <p:commandButton value="#{ copiaBean.paginacao.paginaAtual + 1}"
+                         title="Página #{ copiaBean.paginacao.paginaAtual + 1} de #{ copiaBean.paginacao.totalPaginas}"
+                         style="border: rgb(255,82,82) solid 2px;"/>
+        <!-- fim pagina atual -->
+        <p:commandButton action="#{copiaBean.changePage}"
+                         value="#{ copiaBean.paginacao.paginaAtual + 2 }" 
+                         rendered="#{copiaBean.paginacao.paginaAtual != (copiaBean.paginacao.totalPaginas - 1)}"
+                         title="Página #{ copiaBeancopiaBeancopiaBean.paginacao.paginaAtual + 2} de #{ copiaBean.paginacao.totalPaginas}"
+                         ajax="false">
+            <f:param name="pagina" value="#{copiaBean.paginacao.paginaAtual + 1}"/>
+        </p:commandButton>
+        <!-- avançar -->
+        <p:commandButton title="Avançar" actionListener="#{copiaBean.next}" 
+                         disabled="#{copiaBean.paginacao.paginaAtual == (copiaBean.paginacao.totalPaginas - 1)}" value="»" 
+                         ajax="false"/>
+        <!-- fim avançar -->
+    </center>
+</ui:composition>

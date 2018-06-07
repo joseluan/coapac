@@ -1,0 +1,69 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <ui:include src="/autenticado/_buscar_copia.xhtml"/>
+                    <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                     action="#{ copiaBean.listaFiltro }"
+                                     title="pesquisar uma cópia"/>
+                </h:form>
+            </div>
+        </div>
+        <center>
+            <h1>Remover uma cópia</h1>
+            <h2>
+                <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                               rendered="#{empty copiaBean.copias}"/>
+            </h2>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--12-col">
+                    <p:dataTable value="#{ copiaBean.copias }" var="copia" id="lista_copia"
+                                 sortMode="multiple" rendered="#{not empty copiaBean.copias}">
+                        <p:column headerText="Matricula" sortBy="#{usuario.matricula}">
+                            <h:outputText value="#{copia.usuario.matricula}" />
+                        </p:column>
+
+                        <p:column headerText="Nome" sortBy="#{usuario.nome}">
+                            <h:outputText value="#{copia.usuario.nome}" />
+                        </p:column>
+
+                        <p:column headerText="Quantidade" sortBy="#{copia.quantidade}">
+                            <h:outputText value="#{copia.quantidade}" />
+                        </p:column>
+
+                        <p:column headerText="Data" sortBy="#{copia.data_copia}">
+                            <h:outputText value="#{formatador.formatarData(copia.data_copia)}" />
+                        </p:column>
+
+                        <p:column headerText="Ação" width="280">
+                            <h:form>
+                                <center>
+                                    <p:commandButton value="Remover cópia" icon="ui-icon-trash"
+                                                     action="#{ copiaBean.remover(copia) }"
+                                                     update="@all"
+                                                     title="Remover a cópia com o id #{copia.id}">
+                                        <p:confirm header="Confirmar" message="Você tem certeza de remover essa cópia?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </center>
+                            </h:form>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div> 
+            <h:form rendered="#{ not empty copiaBean.copias}" id="formPaginacao">
+                <ui:include src="/autenticado/_paginacao_copia.xhtml"/>
+            </h:form>
+        </center>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

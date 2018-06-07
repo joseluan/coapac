@@ -1,0 +1,103 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <ui:include src="/autenticado/_buscar_relatorio.xhtml"/>
+                    <p:outputLabel  value="Solicitação:"
+                                    style="padding: 15px;"/>
+                    <p:selectOneMenu id="tipo" value="#{emprestimoBean.emprestimo.solicitacao}" style="width:125px;top: 5px;">
+                        <f:selectItem itemLabel="Todos" itemValue="TODOS" />
+                        <f:selectItem itemLabel="Pendente" itemValue="PENDENTE" />
+                        <f:selectItem itemLabel="Deferido" itemValue="DEFERIDO" />
+                        <f:selectItem itemLabel="Indeferido" itemValue="INDEFERIDO" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel  value="Situação:"
+                                    style="padding: 15px;"/>
+                    <p:selectOneMenu id="acesso" value="#{emprestimoBean.emprestimo.situacao}" style="width:125px;top: 5px;">
+                        <f:selectItem itemLabel="Todos" itemValue="TODOS" />
+                        <f:selectItem itemLabel="Aguardando" itemValue="AGUARDANDO" />
+                        <f:selectItem itemLabel="Emprestado" itemValue="EMPRESTADO" />
+                        <f:selectItem itemLabel="Entregue" itemValue="ENTREGUE" />
+                    </p:selectOneMenu>
+                    
+                    <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" 
+                                     value="pesquisar" 
+                                     title="pesquisar um empréstimo"
+                                     action="#{ emprestimoBean.listaFiltro }"/>
+                </h:form>
+            </div>
+        </div>
+        <center>
+            <h1>Remover um empréstimo</h1>
+            <h:panelGroup id="conteudo">
+                <h2>
+                    <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                                   rendered="#{empty emprestimoBean.emprestimos}"/>
+                </h2>
+                <div class="mdl-grid">
+                    <p:dataTable value="#{ emprestimoBean.emprestimos }" var="emprestimo" sortMode="multiple"
+                                 id="lista_emprestimo" rendered="#{not empty emprestimoBean.emprestimos}">
+                        <p:column headerText="Id" sortBy="#{emprestimo.id}" width="50">
+                            <h:outputText value="#{emprestimo.id}" />
+                        </p:column>
+                        <p:column headerText="Situação" sortBy="#{emprestimo.situacao}" width="110">
+                            <h:outputText value="#{emprestimo.situacao}" />
+                        </p:column>
+                        <p:column headerText="Solicitação" sortBy="#{emprestimo.solicitacao}" width="80">
+                            <h:outputText value="#{emprestimo.solicitacao}" />
+                        </p:column>
+                        <p:column headerText="Código" sortBy="#{emprestimo.material.codigo}" width="120">
+                            <h:outputText value="#{emprestimo.material.codigo}" rendered="#{ not empty emprestimo.material.codigo }" />
+                        </p:column>
+                        <p:column headerText="Nome - Material" sortBy="#{emprestimo.material.nome}">
+                            <h:outputText value="#{emprestimo.material.nome}"/>
+                        </p:column>
+                        <p:column headerText="Matricula" sortBy="#{emprestimo.usuario_sol.matricula}">
+                            <h:outputText value="#{emprestimo.usuario_sol.matricula}"/>
+                        </p:column>
+                        <p:column headerText="Nome Usuário" sortBy="#{emprestimo.usuario_sol.nome}">
+                            <h:outputText value="#{emprestimo.usuario_sol.nome}"/>
+                        </p:column>
+                        <p:column headerText="Data de expiração" sortBy="#{emprestimo.data_expiracao}" width="100">
+                            <h:outputText value="#{formatador.formatarData(emprestimo.data_expiracao)}"/>
+                        </p:column>
+                        <p:column headerText="Detalhes" width="230">
+                            <center>
+                                <h:form>
+                                    <p style="font-size: 14pt;">
+                                        <p:commandLink value="DETALHES" ajax="false" 
+                                                       action="#{relatorioBean.selecionar_emprestimo(emprestimo)}"
+                                                       style="text-decoration:  none; color: #00c853;
+                                                              margin-right: 10px;"
+                                                              title="ver detalhes sobre o empréstimo #{emprestimo.id}"/>
+                                        <p:commandButton title="Excluir o empréstimo do sistema"
+                                                         icon="ui-icon-trash" update="@all"
+                                                         action="#{emprestimoBean.remover(emprestimo)}"
+                                                         value="Excluir">
+                                            <p:confirm header="Confirmar" message="Você tem certeza de excluir?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </p>
+                                </h:form>
+                            </center>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                <h:form rendered="#{ not empty emprestimoBean.emprestimos}" id="paginacao">
+                    <ui:include src="/autenticado/_paginacao_emprestimo.xhtml"/>
+                </h:form>
+            </h:panelGroup>
+        </center>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

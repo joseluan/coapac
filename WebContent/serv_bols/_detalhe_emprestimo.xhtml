@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--12-col">
+			<center>
+				<h1>Detalhes do emprestimo</h1>
+			</center>
+			<h4 style="text-align: left">
+				<strong>Data de expiração</strong>
+				#{relatorioBean.emprestimo.data_expiracao}<br /> <strong>Data
+					de entrega:</strong> #{relatorioBean.emprestimo.data_entrega}<br /> <strong>Situação:</strong>
+				#{relatorioBean.emprestimo.situacao}<br /> <strong>Status
+					da solicitação:</strong> #{relatorioBean.emprestimo.solicitacao}<br />
+			</h4>
+		</div>
+	</div>
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--6-col">
+			<p:fieldset legend="Dados do Material" style="margin-bottom:20px">
+				<p:panelGrid columns="2" id="dialogo">
+					<h:outputText value="Nome:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.material.nome}" />
+
+					<h:outputText value="Descrição:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.material.descricao}" />
+
+					<h:outputText value="Código:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.material.codigo}" />
+
+					<h:outputText value="Tipo:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.material.tipo}" />
+				</p:panelGrid>
+			</p:fieldset>
+		</div>
+		<div class="mdl-cell mdl-cell--6-col">
+			<p:fieldset legend="Dados do usuário Solicitante"
+				style="margin-bottom:20px">
+				<p:panelGrid columns="2" id="dialogo3">
+					<h:outputText value="Nome:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.usuario_sol.nome}" />
+
+					<h:outputText value="Matricula:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_sol.matricula}" />
+
+					<h:outputText value="Vinculo:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_sol.vinculo}" />
+
+					<h:outputText value="Acesso:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_sol.acesso}" />
+
+					<h:outputText value="Tipo:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.usuario_sol.tipo}" />
+				</p:panelGrid>
+			</p:fieldset>
+		</div>
+	</div>
+	<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--6-col">
+			<p:fieldset
+				legend="Dados do usuário que DEFERIU/INDEFERIU o emprestimo"
+				style="margin-bottom:20px"
+				rendered="#{not empty relatorioBean.emprestimo.usuario_emp}">
+				<p:panelGrid columns="2" id="dialogo3">
+					<h:outputText value="Nome:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.usuario_emp.nome}" />
+
+					<h:outputText value="Matricula:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_emp.matricula}" />
+
+					<h:outputText value="Vinculo:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_emp.vinculo}" />
+
+					<h:outputText value="Acesso:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_emp.acesso}" />
+
+					<h:outputText value="Tipo:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.usuario_emp.tipo}" />
+				</p:panelGrid>
+			</p:fieldset>
+		</div>
+		<div class="mdl-cell mdl-cell--6-col">
+			<p:fieldset
+				legend="Dados do usuário que recebeu o material emprestado"
+				style="margin-bottom:20px"
+				rendered="#{not empty relatorioBean.emprestimo.usuario_ent}">
+				<p:panelGrid columns="2" id="dialogo3">
+					<h:outputText value="Nome:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.usuario_ent.nome}" />
+
+					<h:outputText value="Matricula:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_ent.matricula}" />
+
+					<h:outputText value="Vinculo:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_ent.vinculo}" />
+
+					<h:outputText value="Acesso:" style="font-weight: bold;" />
+					<h:outputText
+						value="#{relatorioBean.emprestimo.usuario_ent.acesso}" />
+
+					<h:outputText value="Tipo:" style="font-weight: bold;" />
+					<h:outputText value="#{relatorioBean.emprestimo.usuario_ent.tipo}" />
+				</p:panelGrid>
+			</p:fieldset>
+		</div>
+	</div>
+</ui:composition>

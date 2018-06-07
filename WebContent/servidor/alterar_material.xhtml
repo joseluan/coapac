@@ -1,0 +1,113 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+        <style>
+            .demo-card-square.mdl-card {
+                background: #DCDCDC;
+            }
+        </style>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <ui:include src="/autenticado/_buscar_material.xhtml"/>
+                    <p:outputLabel  value="Ativo:"
+                                    style="padding: 15px;"/>
+                    <p:selectOneMenu id="ativo" value="#{materialBean.material.isAtivo}" style="width:125px;top: 5px;">
+                        <f:selectItem itemLabel="Verdadeiro" itemValue="VERDADEIRO" />
+                        <f:selectItem itemLabel="Falso" itemValue="FALSO" />
+                        <f:selectItem itemLabel="Ambos" itemValue="AMBOS" />
+                    </p:selectOneMenu>
+                    <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" 
+                                     value="pesquisar"
+                                     action="#{ materialBean.listaFiltro() }"
+                                     title="pesquisar por um material"/>
+                </h:form>
+            </div>
+        </div>
+        <h:panelGroup id="lista">
+            <center>
+                <h1>Alterar um material</h1>
+                <h2>
+                    <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                                   rendered="#{empty materialBean.materiais}"/>
+                </h2>
+                <h:form>
+                    <div class="mdl-grid">
+                        <p:dataTable value="#{materialBean.materiais }" var="material" sortMode="multiple"
+                                     rendered="#{ not empty materialBean.materiais}">
+                            <p:column headerText="Nome" sortBy="#{material.nome}">
+                                <h:outputText value="#{material.nome}" />
+                            </p:column>
+                            <p:column headerText="Código" sortBy="#{material.codigo}">
+                                <h:outputText value="#{material.codigo}" rendered="#{not empty material.codigo}" />
+                            </p:column>
+                            <p:column headerText="Descrição" sortBy="#{material.descricao}">
+                                <h:outputText value="#{material.descricao}" />
+                            </p:column>
+                            <p:column headerText="Tipo" sortBy="#{material.tipo}">
+                                <h:outputText value="#{material.tipo}" />
+                            </p:column>
+                            <p:column headerText="Quantidade" sortBy="#{material.quantidade}">
+                                <h:outputText value="#{material.quantidade}" />
+                            </p:column>
+                            <p:column headerText="Ativo" sortBy="#{material.isAtivo}">
+                                <h:outputText value="#{material.isAtivo}" />
+                            </p:column>
+                            <p:column headerText="Ações">      
+                                <center>
+                                    <p:commandButton value="Editar material" ajax="false" icon="ui-icon-pencil"
+                                                     actionListener="#{materialBean.selecionar(material)}"
+                                                     title="Editar o material #{material.nome}"/>
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                    </div>  
+                </h:form>
+                <h:form rendered="#{ not empty materialBean.materiais}">
+                    <ui:include src="/autenticado/_paginacao_material.xhtml"/>
+                </h:form>
+            </center>
+
+            <p:dialog header="Editar Mateiral" widgetVar="ModalEditar" modal="true" height="330"
+                      id="dialogo"  >
+                <h:form>
+                    <p:panelGrid columns="2" id="dialogo">
+                        <h:outputText value="Nome:" />
+                        <p:inputText value="#{materialBean.materialSelecionado.nome}" />
+
+                        <h:outputText value="Quantidade:" />
+                        <p:spinner value="#{materialBean.materialSelecionado.quantidade}" />
+
+                        <h:outputText value="Código:" />
+                        <p:inputText value="#{materialBean.materialSelecionado.codigo}" />
+
+                        <h:outputText value="Descrição:" />
+                        <p:inputTextarea rows="5" cols="33" value="#{materialBean.materialSelecionado.descricao}" />
+
+                        <h:outputText value="Tipo:" />
+                        <p:selectOneRadio value="#{materialBean.materialSelecionado.tipo}">
+                            <f:selectItem itemLabel="Permanente" itemValue="PERMANENTE" />
+                            <f:selectItem itemLabel="Diário" itemValue="DIARIO" />
+                            <f:selectItem itemLabel="Livro" itemValue="LIVRO" />
+                            <f:selectItem itemLabel="Armario" itemValue="ARMARIO" />
+                        </p:selectOneRadio>
+
+                        <h:outputText value="Ativo:" />
+                        <p:selectOneRadio value="#{materialBean.materialSelecionado.isAtivo}">
+                            <f:selectItem itemLabel="Verdadeiro" itemValue="VERDADEIRO" />
+                            <f:selectItem itemLabel="Falso" itemValue="FALSO" />
+                        </p:selectOneRadio>
+                    </p:panelGrid> 
+                    <h:inputHidden value="#{materialBean.materialSelecionado.id}"/>
+                    <p:commandButton value="Alterar" actionListener="#{materialBean.atualizar}"
+                                     ajax="false" icon="ui-icon-pencil"/>
+                </h:form>
+            </p:dialog> 
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

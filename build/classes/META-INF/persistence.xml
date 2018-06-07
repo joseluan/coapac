@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd ">
+    <persistence-unit name="COAPAC-PU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>br.com.ifrn.coapac.model.Copia</class>
+        <class>br.com.ifrn.coapac.model.Emprestimo</class>
+        <class>br.com.ifrn.coapac.model.Limite</class>
+        <class>br.com.ifrn.coapac.model.Material</class>
+        <class>br.com.ifrn.coapac.model.Postagem</class>
+        <class>br.com.ifrn.coapac.model.Resposta</class>
+        <class>br.com.ifrn.coapac.model.Usuario</class>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="admin"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/coapac"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true" />
+
+            <!-- configurações do pool de conexão -->
+            <property name="connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider"/>
+            <property name="hibernate.c3p0.acquire_increment" value="8"/>
+            <property name="hibernate.c3p0.min_size" value="10"/>
+            <property name="hibernate.c3p0.max_size" value="50"/>
+            <property name="hibernate.c3p0.max_statements" value="30"/>
+            <property name="hibernate.c3p0.idle_test_period" value="100"/>
+            <property name="hibernate.c3p0.timeout" value="100"/>
+            <property name="javax.persistence.query.timeout" value="100"/>
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <center>
+        <!-- retornar -->
+        <p:commandButton actionListener="#{ usuarioBean.previous}" title="Voltar" value="«"
+                         disabled="#{usuarioBean.paginacao.paginaAtual == 0}"
+                         ajax="false"/>
+        <!-- fim retornar -->
+        <p:commandButton action="#{usuarioBean.changePage}" value="#{usuarioBean.paginacao.paginaAtual}" 
+                         rendered="#{usuarioBean.paginacao.paginaAtual > 0}" 
+                         title="Página #{ usuarioBean.paginacao.paginaAtual} de #{ usuarioBean.paginacao.totalPaginas}"
+                         ajax="false" >
+            <f:param name="pagina" value="#{usuarioBean.paginacao.paginaAtual - 1}"/>
+        </p:commandButton>
+        <!-- pagina atual -->
+        <p:commandButton value="#{ usuarioBean.paginacao.paginaAtual + 1}"
+                         title="Página #{ usuarioBean.paginacao.paginaAtual + 1} de #{ usuarioBean.paginacao.totalPaginas}"
+                         style="border: rgb(255,82,82) solid 2px;"/>
+        <!-- fim pagina atual -->
+        <p:commandButton action="#{usuarioBean.changePage}"
+                         value="#{ usuarioBean.paginacao.paginaAtual + 2 }" 
+                         rendered="#{usuarioBean.paginacao.paginaAtual != (usuarioBean.paginacao.totalPaginas - 1)}"
+                         title="Página #{ usuarioBean.paginacao.paginaAtual + 2} de #{ usuarioBean.paginacao.totalPaginas}"
+                         ajax="false">
+            <f:param name="pagina" value="#{usuarioBean.paginacao.paginaAtual + 1}"/>
+        </p:commandButton>
+        <!-- avançar -->
+        <p:commandButton title="Avançar" actionListener="#{usuarioBean.next}" 
+                         disabled="#{usuarioBean.paginacao.paginaAtual == (usuarioBean.paginacao.totalPaginas - 1)}" value="»" 
+                         ajax="false"/>
+        <!-- fim avançar -->
+    </center>
+</ui:composition>

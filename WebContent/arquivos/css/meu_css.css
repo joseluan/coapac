@@ -1,0 +1,77 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 25/02/2018, 14:16:59
+    Author     : Luan
+*/
+.demo-card-event > .mdl-card__actions {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.demo-card-event > .mdl-card__title {
+    align-items: flex-start;
+}
+.demo-card-event > .mdl-card__title > h4 {
+    margin-top: 0;
+}
+.demo-card-event > .mdl-card__actions {
+    display: flex;
+    box-sizing:border-box;
+    align-items: center;
+}
+.demo-card-event > .mdl-card__actions > .material-icons {
+    padding-right: 10px;
+}
+.demo-card-event > .mdl-card__title,
+.demo-card-event > .mdl-card__actions,
+.demo-card-event > .mdl-card__actions > .mdl-button {
+    color: #fff;
+}
+.demo-card-square.mdl-card:hover{
+    opacity: 0.75;
+}
+.demo-card-square.mdl-card {
+    width: 300px;
+    height: 250px;
+    border-radius: 10px;
+    transition: all 1s;
+}
+.listaNULL{
+    color: lightsteelblue;
+}
+.branco{
+    color: #DCDCDC;
+}
+.demo-card-square.mdl-card h3{
+    color: #DCDCDC;
+}
+.postagem{
+    border-radius: 15px;
+    padding: 1%;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+.conteudo_postagem{
+	position: relative;
+	font-size: 12pt;
+}
+.conteudo_postagem p{
+	display: inline;
+}
+.infor{
+ 	float: left;
+}
+.opcoes_postagem{
+	float: right;
+}
+.fundo{
+	background-color: #6d0a0c;
+}
+.opcoes_postagem{
+	float: right;
+}
+.cabecalho_mural{
+	color: white;
+}

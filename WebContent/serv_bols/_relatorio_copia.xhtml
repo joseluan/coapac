@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+            <h:form>
+                <ui:include src="/autenticado/_buscar_copia.xhtml"/>
+                <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                 action="#{ copiaBean.listaFiltro }"
+                                 title="pesquisar por cópia"/>
+            </h:form>
+        </div>
+    </div>
+    <center>
+        <h1>Relatório de cópia</h1>
+        <h2>
+            <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                           rendered="#{empty copiaBean.copias}"/>
+        </h2>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <strong style="font-size: 16pt;">
+                        <p:commandLink value="IMPRIMIR RELATÓRIO" ajax="false" 
+                                       action="#{relatorioBean.selecionar_copias(copiaBean.copias)}"
+                                       style="text-decoration:  none; color: #00c853;margin-left: 75%;"
+                                       target="_blank"
+                                       rendered="#{not empty copiaBean.copias}"
+                                       title="Gerar relatório de cópias"/>
+                    </strong>
+                </h:form>
+                <br/>
+                <p:dataTable value="#{ copiaBean.copias }" var="copia" id="lista_copia"
+                             sortMode="multiple" rendered="#{not empty copiaBean.copias}">
+
+                    <p:column headerText="Matricula" sortBy="#{copia.usuario.matricula}">
+                        <h:outputText value="#{copia.usuario.matricula}" />
+                    </p:column>
+
+                    <p:column headerText="Nome" sortBy="#{copia.usuario.nome}">
+                        <h:outputText value="#{copia.usuario.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Quantidade" sortBy="#{copia.quantidade}">
+                        <h:outputText value="#{copia.quantidade}" />
+                    </p:column>
+
+                    <p:column headerText="Data" sortBy="#{copia.data_copia}">
+                        <h:outputText value="#{formatador.formatarData(copia.data_copia)}" />
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </div> 
+        <h:form rendered="#{ not empty copiaBean.copias}">
+            <ui:include src="/autenticado/_paginacao_copia.xhtml"/>
+        </h:form>
+    </center>
+</ui:composition>

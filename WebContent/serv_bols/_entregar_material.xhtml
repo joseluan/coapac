@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <ui:include src="/autenticado/_buscar_entrega.xhtml"/>
+                <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" 
+                                 value="pesquisar"
+                                 action="#{ emprestimoBean.listaFiltro }"
+                                 title="pesquisar um empréstimo">
+                    <f:setPropertyActionListener value="EMPRESTADO" target="#{emprestimoBean.emprestimo.situacao}" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <center>
+        <h1>Entregar um material</h1>
+        <h2>
+            <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                           rendered="#{empty emprestimoBean.emprestimos}"/>
+        </h2>
+        <div class="mdl-grid">
+
+            <p:dataTable value="#{ emprestimoBean.emprestimos }" var="emprestimo"
+                         rendered="#{ not empty emprestimoBean.emprestimos }"
+                         id="lista">
+                <p:column headerText="Id" sortBy="#{emprestimo.id}">
+                    <h:outputText value="#{emprestimo.id}" />
+                </p:column>
+
+                <p:column headerText="Nome Material" sortBy="#{emprestimo.material.nome}">
+                    <h:outputText value="#{emprestimo.material.nome}" />
+                </p:column>
+
+                <p:column headerText="Código Material" sortBy="#{emprestimo.material.codigo}">
+                    <h:outputText value="#{emprestimo.material.codigo}" />
+                </p:column>
+
+                <p:column headerText="Matricula" sortBy="#{emprestimo.usuario_sol.matricula}">
+                    <h:outputText value="#{emprestimo.usuario_sol.matricula}" />
+                </p:column>
+
+                <p:column headerText="Nome usuário" sortBy="#{emprestimo.usuario_sol.nome}">
+                    <h:outputText value="#{emprestimo.usuario_sol.nome}" />
+                </p:column>
+
+                <p:column headerText="Data de expiração" sortBy="#{emprestimo.data_expiracao}">
+                    <h:outputText value="#{emprestimo.data_expiracao}" />
+                </p:column>
+                <p:column headerText="">
+                    <center>
+                        <h:form>
+                            <p:commandButton value="Entregar material"
+                                             action="#{ emprestimoBean.atualizarEntrega(emprestimo) }"
+                                             update="@all"
+                                             title="Devolver o material #{emprestimo.material.nome} a COAPAC">
+                                <p:confirm header="Confirmation" message="Entregar o material #{emprestimo.material.nome}?"
+                                           icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </h:form>
+                    </center>
+                </p:column>
+            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog> 
+        </div>
+        <h:form rendered="#{ not empty emprestimoBean.emprestimos}">
+            <ui:include src="/autenticado/_paginacao_emprestimo.xhtml"/>
+        </h:form>
+    </center>
+</ui:composition>

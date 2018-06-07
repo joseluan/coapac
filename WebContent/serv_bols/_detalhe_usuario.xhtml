@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+            <h:form>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <h:inputText class="mdl-textfield__input" id="matricula"
+                                 value="#{ usuarioBean.usuario.matricula }"/>
+                    <label class="mdl-textfield__label" for="matricula">Matricula...</label>
+                </div>
+                <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                 action="#{ usuarioBean.buscarFiltro }"/>
+            </h:form>
+        </div>
+    </div>
+    <center>
+        <h1>Detalhes sobre o usuário</h1>
+        <h2>
+            <h:outputLabel styleClass="listaNULL" value="Nenhum usuário selecionado"
+                           rendered="#{empty usuarioBean.usuario_busca}"/>
+        </h2>
+    </center>
+    <p:panel rendered="#{not empty usuarioBean.usuario_busca}">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--1-col"></div>
+            <div class="mdl-cell mdl-cell--11-col">
+                <h4>
+                    <b>Nome:</b> #{usuarioBean.usuario_busca.nome}
+                    <b>Matricula:</b> #{usuarioBean.usuario_busca.matricula}
+                    <b>Acesso:</b> #{usuarioBean.usuario_busca.acesso}
+                </h4>
+                <h4>
+                    <b>Vinculo:</b> #{usuarioBean.usuario_busca.vinculo}
+                    <b>Tipo:</b> #{usuarioBean.usuario_busca.tipo}
+                    <b>Limite de cópias:</b> #{usuarioBean.usuario_busca.quantidade_copia}
+                </h4>
+                <h4 style="color: #b71c1c;">
+                    <h:outputLabel value="Esse usuário está inadimplente!"
+                                   rendered="#{emprestimoBean.userIsInadimplente(usuarioBean.usuario_busca)}"/>
+                </h4>
+            </div>
+        </div> 
+        <center><h3><h:outputLabel value="Solicitações" rendered="#{not empty usuarioBean.emprestimosPara}"/></h3></center>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col" >
+                <p:dataTable value="#{ usuarioBean.emprestimosPara }" var="emprestimo" sortMode="multiple" 
+                             rendered="#{not empty usuarioBean.emprestimosPara}">
+                    <p:column headerText="Situação" sortBy="#{emprestimo.situacao}" width="110">
+                        <h:outputText value="#{emprestimo.situacao}" />
+                    </p:column>
+                    <p:column headerText="Solicitação" sortBy="#{emprestimo.solicitacao}" width="80">
+                        <h:outputText value="#{emprestimo.solicitacao}" />
+                    </p:column>
+                    <p:column headerText="Código" sortBy="#{emprestimo.material.codigo}" width="120">
+                        <h:outputText value="#{emprestimo.material.codigo}" rendered="#{ not empty emprestimo.material.codigo }" />
+                    </p:column>
+                    <p:column headerText="Nome - Material" sortBy="#{emprestimo.material.nome}">
+                        <h:outputText value="#{emprestimo.material.nome}"/>
+                    </p:column>
+                    <p:column headerText="Matricula - Entrega" sortBy="#{emprestimo.usuario_ent.matricula}">
+                        <h:outputText value="#{emprestimo.usuario_ent.matricula}"/>
+                    </p:column>
+                    <p:column headerText="Nome - Entrega" sortBy="#{emprestimo.usuario_ent.nome}">
+                        <h:outputText value="#{emprestimo.usuario_ent.nome}"/>
+                    </p:column>
+                    <p:column headerText="Matricula - Emprestimo" sortBy="#{emprestimo.usuario_emp.matricula}">
+                        <h:outputText value="#{emprestimo.usuario_emp.matricula}"/>
+                    </p:column>
+                    <p:column headerText="Nome - Emprestimo" sortBy="#{emprestimo.usuario_emp.nome}">
+                        <h:outputText value="#{emprestimo.usuario_emp.nome}"/>
+                    </p:column>
+                    <p:column headerText="Data expiração" sortBy="#{emprestimo.data_expiracao}" width="100">
+                        <h:outputText value="#{formatador.formatarData(emprestimo.data_expiracao)}"/>
+                    </p:column>
+                    <p:column headerText="Data Entrega" sortBy="#{emprestimo.data_entrega}" width="100">
+                        <h:outputText value="#{formatador.formatarData(emprestimo.data_entrega)}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </div>
+        <center>
+            <h3><h:outputLabel value="Ultimas 20 Cópias" rendered="#{not empty usuarioBean.emprestimosPara}"/></h3>
+            <p:dataTable value="#{ usuarioBean.copiasPara }" var="copia" sortMode="multiple" 
+                         rendered="#{not empty usuarioBean.copiasPara}" style="width: 500px;">
+                <p:column headerText="Quantidade" sortBy="#{copia.quantidade}" width="110">
+                    <h:outputText value="#{copia.quantidade}" />
+                </p:column>
+                <p:column headerText="Data da cópia" sortBy="#{copia.data_copia}" width="80">
+                    <h:outputText value="#{formatador.formatarData(copia.data_copia)}" />
+                </p:column>
+            </p:dataTable>
+            <br/><br/><br/>
+        </center>
+    </p:panel>
+</ui:composition>

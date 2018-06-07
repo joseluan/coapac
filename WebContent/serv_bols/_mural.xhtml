@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<div class="mdl-grid fundo">
+		<div class="mdl-cell mdl-cell--5-col">
+			<h:form>
+				<p:inputText class="form-control"
+					style="width: 100%;border-radius: 0px;
+						   margin-bottom: 3px;
+						   border-color: #6d0a0c;"
+					value="#{ postagemBean.postagem.titulo }"
+					placeholder="Titulo da postagem" />
+				<br />
+				<p:inputTextarea class="form-control" rows="7"
+					style="width: 100%; border-radius: 0px;"
+					value="#{ postagemBean.postagem.descricao }"
+					placeholder="Digite aqui sua postagem" />
+				<br />
+				<p:selectOneButton value="#{ postagemBean.postagem.tipo }"
+					style="margin: -2% 0px 0px 1%;">
+					<f:selectItem itemLabel="Mensagem" itemValue="MENSAGEM" />
+					<f:selectItem itemLabel="Tarefa" itemValue="TAREFA" />
+					<f:selectItem itemLabel="Aviso" itemValue="AVISO" />
+				</p:selectOneButton>
+				<h:commandButton value="POSTAR"
+					style="margin: -5% 0px 0px 15%;
+					border: #940000 solid 1px; 
+					background-color: #b71c1c;
+					height: 50px;width: 150px;
+					border-radius: 10px;
+					color: #fff;"
+					title="clique para fazer uma postagem"
+					action="#{ postagemBean.adicionar() }" ajax="false" />
+			</h:form>
+		</div>
+		<div class="mdl-cell mdl-cell--7-col cabecalho_mural"
+			style="padding-left: 5%">
+			<h1><strong>Mural de informações</strong></h1>
+			<ul>
+				<li>
+				<h4><h:link value="Minhas postagems"
+				 outcome="meu_mural"
+				 style="text-decoration: none; color: #fff;"/>
+				 </h4>
+				 </li>
+			</ul>
+		</div>
+	</div>
+	<!-- COMEÇO do MURAL -->
+	<h:panelGroup id="lista_postagem" styleClass="fundo">
+		<div class="fundo">
+			<!-- mostrando as ultimas perguntas -->
+			<ui:repeat id="perguntas" var="postagem"
+				value="#{ postagemBean.todasPostagems }">
+				<center>
+					<div class="mdl-grid">
+						<div class="mdl-cell mdl-cell--3-col"></div>
+						<div class="mdl-cell mdl-cell--6-col postagem">
+							<!-- INFORMAÇÕES SOBRE A POSTAGEM -->
+							<div class="infor">
+								<h:outputLabel value="#{ postagem.usuario.nome }" />
+								- publicado em:
+								<h:outputLabel
+									value="#{ formatador.formatarDataHora(postagem.data_postagem) }" />
+							</div>
+							<h:panelGroup
+								rendered="#{postagemBean.usuario_session.id == postagem.usuario.id}">
+								<div class="opcoes_postagem">
+									<h:form>
+										<p:commandButton update="lista_postagem" icon="ui-icon-close" value="excluir"
+											title="Remover a postagem com o id: #{postagem.id}"
+											action="#{ postagemBean.remover(postagem)}">
+											<p:confirm header="Confirmar"
+												message="Você tem certeza de excluir essa postagem?"
+												icon="ui-icon-alert" />
+										</p:commandButton>
+										<p:commandButton ajax="false" icon="ui-icon-pencil"
+											actionListener="#{postagemBean.selecionar(postagem)}"
+											title="Editar a postagem com o id: #{postagem.id}"
+											value="editar" />
+									</h:form>
+								</div>
+							</h:panelGroup>
+							<br />
+							<!-- FIM - INFORMAÇÕES SOBRE A POSTAGEM -->
+							<div class="conteudo_postagem">
+								<h5>
+									<h:outputText value="#{ postagem.titulo }" />
+								</h5>
+								<br />
+								<p>
+									<h:outputText value="#{ postagem.descricao }" />
+								</p>
+							</div>
+							<ui:remove>
+								<div class="respostas">
+									<!-- mostrando as respostas de cada pergunta -->
+									<h3>Respostas</h3>
+									<ui:repeat var="resposta"
+										value="#{ respostaBean.getLimiteRespostaByPergunta(pergunta) }">
+										<p>
+										<h5>
+											<b><h:outputText value="#{ resposta.usuario.nome }" />:
+											</b>
+											<h:outputText value="   #{ resposta.texto }" />
+											, <b><h:outputText
+													value=" publicado em: #{ formatador.formatarDataHora(resposta.data) }" /></b>
+										</h5>
+										</p>
+									</ui:repeat>
+									<!-- teste -->
+									<h:form>
+										<p:inputTextarea cols="30" rows="3"
+											value="#{ respostaBean.resposta.texto }"
+											placeholder="Insira sua resposta" id="Minha_resposta">
+											<f:validateLength minimum="2" />
+										</p:inputTextarea>
+										<br />
+										<p:commandButton value="Responder" style="margin: 20px;">
+											<f:ajax event="click" execute="@form" render="lista"
+												listener="#{ respostaBean.criar(pergunta) }" />
+										</p:commandButton>
+									</h:form>
+								</div>
+							</ui:remove>
+						</div>
+					</div>
+				</center>
+			</ui:repeat>
+		</div>
+	</h:panelGroup>
+	<!-- Fim do MURAL -->
+	<!-- Editar -->
+	<p:dialog header="Editar Postagem" widgetVar="ModalEditar" modal="true"
+		height="330" id="dialogo">
+		<h:form>
+			<p:panelGrid columns="2" id="dialogo">
+				<h:outputText value="Título:" />
+				<p:inputText value="#{postagemBean.postagemSelecionada.titulo}" />
+
+				<h:outputText value="Descrição:" />
+				<p:inputTextarea rows="7" cols="33"
+					value="#{postagemBean.postagemSelecionada.descricao}" />
+			</p:panelGrid>
+			<h:inputHidden value="#{postagemBean.postagemSelecionada.id}" />
+			<p:commandButton value="Alterar"
+				actionListener="#{postagemBean.atualizar}" ajax="false"
+				icon="ui-icon-pencil" />
+		</h:form>
+	</p:dialog>
+	<!-- FIM Editar -->
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<p:commandButton value="Sim" type="button"
+			styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		<p:commandButton value="Não" type="button"
+			styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
+</ui:composition>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <h:inputText class="mdl-textfield__input" id="nome"
+                     value="#{ materialBean.material.nome }"/>
+        <label class="mdl-textfield__label" for="nome">Nome...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <h:inputText class="mdl-textfield__input" id="codigo"
+                     value="#{ materialBean.material.codigo }"/>
+        <label class="mdl-textfield__label" for="codigo">Código...</label>
+    </div>
+    <p:outputLabel  value="Tipo:"
+                    style="padding: 15px;"/>
+    <p:selectOneMenu id="tipo" value="#{materialBean.material.tipo}" style="width:125px;top: 5px;">
+        <f:selectItem itemLabel="Todos" itemValue="TODOS" />
+        <f:selectItem itemLabel="Diario" itemValue="DIARIO" />
+        <f:selectItem itemLabel="Permanente" itemValue="PERMANENTE" />
+        <f:selectItem itemLabel="Livro" itemValue="LIVRO" />
+        <f:selectItem itemLabel="Armario" itemValue="ARMARIO" />
+    </p:selectOneMenu>
+</ui:composition>

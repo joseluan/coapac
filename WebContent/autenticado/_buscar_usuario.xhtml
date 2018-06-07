@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <h:inputText class="mdl-textfield__input" id="matricula"
+                     value="#{ usuarioBean.usuario.matricula }"/>
+        <label class="mdl-textfield__label" for="matricula">Matricula...</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <h:inputText class="mdl-textfield__input" id="nome"
+                     value="#{ usuarioBean.usuario.nome }"/>
+        <label class="mdl-textfield__label" for="nome">Nome...</label>
+    </div>
+    <p:outputLabel  value="Tipo:"
+                   style="padding: 15px;"/>
+    <p:selectOneMenu id="tipo" value="#{usuarioBean.usuario.tipo}" style="width:125px;top: 5px;">
+        <f:selectItem itemLabel="Todos" itemValue="TODOS" />
+        <f:selectItem itemLabel="Aluno" itemValue="ALUNO" />
+        <f:selectItem itemLabel="Servidor" itemValue="SERVIDOR" />
+    </p:selectOneMenu>
+    
+    <p:outputLabel  value="Acesso:"
+                   style="padding: 15px;"/>
+    <p:selectOneMenu id="acesso" value="#{usuarioBean.usuario.acesso}" style="width:125px;top: 5px;">
+        <f:selectItem itemLabel="Todos" itemValue="TODOS" />
+        <f:selectItem itemLabel="Aluno" itemValue="ALUNO" />
+        <f:selectItem itemLabel="Bolsista" itemValue="BOLSISTA" />
+        <f:selectItem itemLabel="Servidor" itemValue="SERVIDOR" />
+    </p:selectOneMenu>
+</ui:composition>

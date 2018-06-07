@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="/WEB-INF/templates/template_publico.xhtml">
+
+    <ui:define name="conteudo">
+        <c:set var="tamanho" value="16pt"/>
+        <center>
+            <br/>
+            <br/>
+            <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text">Sistema de Controle da COAPAC/JC</h2>
+                </div>
+                <h:form>
+                    <div class="mdl-card__supporting-text">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <h:inputText class="mdl-textfield__input" value="#{loginBean.usuario.matricula}"
+                                         id="matricula" style="font-size: ${tamanho};" rendered="true"/>
+                            <label class="mdl-textfield__label" style="font-size: ${tamanho};"
+                                   for="matricula">Matricula...</label>
+                        </div>    
+                        <br/>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">    
+                            <h:inputSecret class="mdl-textfield__input" value="#{loginBean.usuario.senha}"
+                                           id="senha" style="font-size: ${tamanho};" rendered="true">
+                                <f:validateLength minimum="6"/>
+                            </h:inputSecret>
+                            <label class="mdl-textfield__label" style="font-size: ${tamanho};" for="senha">Senha...</label>
+                        </div>    
+                        <br/>
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <h:commandButton class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                         action="#{loginBean.login}" value="Entrar"/>
+                    </div>
+                </h:form>
+                <p>
+                    Desenvolvedores: <p:link href="https://www.facebook.com/100003899882841" 
+                                             value="Jefferson" 
+                                             target="_blank"
+                                             style="text-decoration: none;"/> 
+                                     e
+                                     <p:link href="https://www.facebook.com/joseluan2012" 
+                                             value="Luan" 
+                                             target="_blank"
+                                             style="text-decoration: none;"/> 
+                </p>
+            </div>
+        </center>
+    </ui:define>
+</ui:composition>

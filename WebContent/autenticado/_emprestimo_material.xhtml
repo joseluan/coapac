@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <ui:include src="/autenticado/_buscar_material.xhtml"/>
+                <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                 action="#{ materialBean.listaFiltro }"
+                                 title="pesquisar um material">
+                    <f:setPropertyActionListener value="VERDADEIRO" target="#{materialBean.material.isAtivo}"/>
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <center>
+        <h1>Empréstimo de material</h1>
+        <h2>
+            <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                           rendered="#{empty materialBean.materiais and empty emprestimoBean.listaExpirado}"/>
+        </h2>
+        <h1 style="color: #b71c1c;">
+            <h:outputLabel value="Você possui empréstimos com a data de expiração vencida!"
+                           rendered="#{not empty emprestimoBean.listaExpirado}"/>
+        </h1>
+        <div class="mdl-grid">
+            <p:dataTable value="#{materialBean.materiais }" var="material" sortMode="multiple"
+                         rendered="#{ not empty materialBean.materiais and empty emprestimoBean.listaExpirado }" 
+                         id="lista">
+                <h:inputHidden value="#{material.id}"/>
+                <p:column headerText="Nome" sortBy="#{material.nome}">
+                    <h:outputText value="#{material.nome}" />
+                </p:column>
+                <p:column headerText="Código" sortBy="#{material.codigo}">
+                    <h:outputText value="#{material.codigo}" rendered="#{not empty material.codigo}" />
+                </p:column>
+                <p:column headerText="Descrição" sortBy="#{material.descricao}">
+                    <h:outputText value="#{material.descricao}" />
+                </p:column>
+                <p:column headerText="Tipo" sortBy="#{material.tipo}">
+                    <h:outputText value="#{material.tipo}" />
+                </p:column>
+                <p:column headerText="Quantidade" sortBy="#{material.quantidade}">
+                    <h:outputText value="#{material.quantidade}" />
+                </p:column>
+                <p:column headerText="Ações">      
+                    <center>
+                        <p:commandButton value="Solicitar empréstimo"
+                                         icon="ui-icon-plus" disabled="#{material.quantidade == 0}"
+                                         action="#{ materialBean.adicionarEmprestimo }" 
+                                         update="@all"
+                                         title="Solicitar um empréstimo de material para #{material.nome}">
+                            <p:confirm header="Confirmation" message="Solicitar material?" icon="ui-icon-alert" />
+                            <f:setPropertyActionListener value="#{material}" target="#{materialBean.materialSelecionado}" />
+                        </p:commandButton>
+                    </center>
+                </p:column>
+            </p:dataTable>
+        </div>
+        <h:form rendered="#{ not empty materialBean.materiais and empty emprestimoBean.listaExpirado }">
+            <ui:include src="/autenticado/_paginacao_material.xhtml"/>
+        </h:form>
+    </center>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+    </p:confirmDialog>
+</ui:composition>

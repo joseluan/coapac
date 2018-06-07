@@ -1,0 +1,66 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+        <style>
+            h3{
+                color: #FFF;
+            }
+            .box{
+                background: #2E8B57;
+                padding: 35px;
+                border-radius: 15px;
+            }
+        </style>
+        <br/>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--6-col box">
+                <h:form>
+                    <center>
+                        <h3>Alterar limite de cópias do #{copiaBean.limiteALUNO.nome}</h3>
+                        <h4>
+                            <h:outputText id="output" value="Alterar para #{copiaBean.limiteALUNO.quantidade} cópias"
+                                          class="branco"/>
+                        </h4>
+                        <h:inputHidden id="quantidade" value="#{copiaBean.limiteALUNO.quantidade}" />
+                        <p:slider for="quantidade" display="output" style="width: 450px;" 
+                                  displayTemplate="{value} cópias selecionadas" minValue="1" maxValue="500"/>
+                        <br/>
+                        <p:commandButton value="Alterar" style="width: 150px;height: 50px;font-size: 16pt;"
+                                         actionListener="#{copiaBean.atualizar(copiaBean.limiteALUNO)}"
+                                         title="Alterar o limite de cópias para o aluno">
+                            <p:confirm header="Confirmar" message="Você tem certeza de alterar?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </center>
+                </h:form>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col box">
+                <h:form>
+                    <center>
+                        <h3>Alterar limite de cópias do #{copiaBean.limiteSERVIDOR.nome}</h3>
+                        <h4>
+                            <h:outputText id="output" value="Alterar para #{copiaBean.limiteSERVIDOR.quantidade} cópias"
+                                          class="branco"/>
+                        </h4>
+                        <h:inputHidden id="quantidade" value="#{copiaBean.limiteSERVIDOR.quantidade}" />
+                        <p:slider for="quantidade" display="output" style="width: 450px;" 
+                                  displayTemplate="{value} cópias selecionadas" minValue="1" maxValue="5000"/>
+                        <br/>
+                        <p:commandButton value="Alterar" style="width: 150px;height: 50px;font-size: 16pt;"
+                                         actionListener="#{copiaBean.atualizar(copiaBean.limiteSERVIDOR)}"
+                                         title="Alterar o limite de cópias para o servidor">
+                            <p:confirm header="Confirmar" message="Você tem certeza de alterar?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </center>
+                </h:form>
+            </div>
+        </div>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

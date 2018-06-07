@@ -1,0 +1,74 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <ui:include src="/autenticado/_buscar_usuario.xhtml"/>
+                    <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                     action="#{ usuarioBean.listaFiltro }"
+                                     title="pesquisar um usuário"/>
+                </h:form>
+            </div>
+        </div>
+        <center>
+            <h1>Adicionar Cópia</h1>
+            <h2>
+                <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                               rendered="#{ empty usuarioBean.usuarios }"/>
+            </h2>
+        </center>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <p:dataTable value="#{ usuarioBean.usuarios }" var="usuario" id="lista_usuario"
+                             sortMode="multiple" rendered="#{not empty usuarioBean.usuarios }">
+                    <p:column headerText="Matricula" sortBy="#{usuario.matricula}">
+                        <h:outputText value="#{usuario.matricula}" />
+                    </p:column>
+
+                    <p:column headerText="Nome" sortBy="#{usuario.nome}">
+                        <h:outputText value="#{usuario.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Vinculo" sortBy="#{usuario.vinculo}">
+                        <h:outputText value="#{usuario.vinculo}" />
+                    </p:column>
+
+                    <p:column headerText="Acesso" sortBy="#{usuario.acesso}">
+                        <h:outputText value="#{usuario.acesso}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo" sortBy="#{usuario.tipo}">
+                        <h:outputText value="#{usuario.tipo}" />
+                    </p:column>
+                    <p:column headerText="Cópias">
+                        <h:form>
+                            <center>
+                                <p:spinner id="console" value="#{ usuario.quantidade_copia }"
+                                           min="1" max="#{usuario.quantidade_copia + 100}"
+                                           style="margin-left: 5px;"/>
+                                <p:commandButton value="Adicionar cópias" 
+                                                 action="#{ usuarioBean.atualizar(usuario) }"
+                                                 ajax="false" icon="ui-icon-pencil" style=" margin: 10px;"
+                                                 title="Adicionar essa quantidade de cópias ao usuário: #{usuario.nome}">
+                                </p:commandButton>
+                            </center>
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+                <h:form rendered="#{ not empty usuarioBean.usuarios }">
+                    <ui:include src="/autenticado/_paginacao_usuario.xhtml"/>
+                </h:form>
+            </div>
+        </div> 
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <ui:include src="/autenticado/_buscar_solicitacao.xhtml"/>
+                <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" 
+                                 value="pesquisar"
+                                 action="#{ emprestimoBean.minhasSolicitacoes }"
+                                 title="pesquisar uma solicitação de empréstimo">
+                    <f:setPropertyActionListener value="AGUARDANDO" target="#{emprestimoBean.emprestimo.situacao}" />
+                    <f:setPropertyActionListener value="PENDENTE" target="#{emprestimoBean.emprestimo.solicitacao}" />
+                </h:commandButton>
+            </div>
+        </div>
+    </h:form>
+    <center>
+        <h1>Remover minhas solicitações de material</h1>
+        <h2>
+            <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                           rendered="#{empty emprestimoBean.emprestimos}"/>
+        </h2>
+        <div class="mdl-grid">
+            <p:dataTable value="#{ emprestimoBean.emprestimos }" var="emprestimo"
+                         rendered="#{ not empty emprestimoBean.emprestimos}" id="lista">
+                <p:column headerText="Id" sortBy="#{emprestimo.id}">
+                    <h:outputText value="#{emprestimo.id}" />
+                </p:column>
+
+                <p:column headerText="Nome material" sortBy="#{emprestimo.material.nome}">
+                    <h:outputText value="#{emprestimo.material.nome}" />
+                </p:column>
+
+                <p:column headerText="Código material" sortBy="#{emprestimo.material.codigo}">
+                    <h:outputText value="#{emprestimo.material.codigo}" />
+                </p:column>
+
+                <p:column headerText="Remover">
+                    <center>
+                        <p:commandButton title="Excluir a solicitação do sistema"
+                                         icon="ui-icon-trash" update="@all"
+                                         action="#{emprestimoBean.remover(emprestimo)}"
+                                         value="Excluir">
+                            <p:confirm header="Confirmar" message="Você tem certeza de excluir essa solicitação?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </center>
+                </p:column>
+            </p:dataTable>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </div>
+        <h:form rendered="#{ not empty emprestimoBean.emprestimos}">
+            <ui:include src="/autenticado/_paginacao_emprestimo.xhtml"/>
+        </h:form>
+    </center>
+</ui:composition>

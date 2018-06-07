@@ -1,0 +1,70 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <ui:include src="/autenticado/_buscar_usuario.xhtml"/>
+                    <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                     action="#{ usuarioBean.listaFiltro }"
+                                     title="pesquisar um usuário"/>
+                </h:form>
+            </div>
+        </div>
+        <center>
+            <h1>Emitir o documento "Nada Consta"</h1>
+            <h2>
+                <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                               rendered="#{ empty usuarioBean.usuarios }"/>
+            </h2>
+        </center>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <p:dataTable value="#{ usuarioBean.usuarios }" var="usuario" id="lista_usuario"
+                             sortMode="multiple" rendered="#{ not empty usuarioBean.usuarios }">
+                    <p:column headerText="Matricula" sortBy="#{usuario.matricula}">
+                        <h:outputText value="#{usuario.matricula}" />
+                    </p:column>
+                    <p:column headerText="Nome" sortBy="#{usuario.nome}">
+                        <h:outputText value="#{usuario.nome}" />
+                    </p:column>
+                    <p:column headerText="Vinculo" sortBy="#{usuario.vinculo}">
+                        <h:outputText value="#{usuario.vinculo}" />
+                    </p:column>
+                    <p:column headerText="Acesso" sortBy="#{usuario.acesso}">
+                        <h:outputText value="#{usuario.acesso}" />
+                    </p:column>
+                    <p:column headerText="Tipo" sortBy="#{usuario.tipo}">
+                        <h:outputText value="#{usuario.tipo}" />
+                    </p:column>
+                    <p:column headerText="Ação" width="280">
+                        <h:form>
+                            <center>
+                                <b style="font-size: 18pt;">
+                                    <p:commandLink value="EMITIR NADA CONSTA" 
+                                                   rendered="#{!emprestimoBean.userIsInadimplente(usuario)}"
+                                                   ajax="false" 
+                                                   action="#{relatorioBean.selecionar_usuarioNC(usuario)}"
+                                                   target="_blank" 
+                                                   style="text-decoration:  none; color: #00c853;"
+                                                   title="Emitir o documento de nada consta para usuário: #{usuario.nome}"/>
+
+                                    <h:outputLabel style="color: #b71c1c;"
+                                                   rendered="#{emprestimoBean.userIsInadimplente(usuario)}"
+                                                   value="Usuário com pendências no sistema"/>
+                                </b>
+                            </center>
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+                <h:form rendered="#{ not empty usuarioBean.usuarios }">
+                    <ui:include src="/autenticado/_paginacao_usuario.xhtml"/>
+                </h:form>
+            </div>
+        </div> 
+    </ui:define>
+</ui:composition>

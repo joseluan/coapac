@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="author" content="José Luan Silva do Nascimento"/>
+
+        <title>COAPAC - JC</title>
+
+        <c:set var="ctx" value="IFRN-JC-COAPAC"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <link rel="stylesheet" href="/${ctx}/arquivos/css/material.min.css"/>
+        <script src="/${ctx}/arquivos/js/material.min.js"></script>
+
+    </h:head>
+    <h:body>
+        <center>
+            <ui:include src="/autenticado/_cabecalho_relatorio.xhtml"/>
+            <h4><b>Relatórios de cópias</b></h4>
+            <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                <thead>
+                    <tr>
+                        <th>Matricula</th>
+                        <th class="mdl-data-table__cell--non-numeric">Nome</th>
+                        <th class="mdl-data-table__cell--non-numeric">Aceso</th>
+                        <th>Quantidade</th>
+                        <th class="mdl-data-table__cell--non-numeric">Data</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <ui:repeat value="#{ relatorioBean.copias }" var="copia">
+                        <tr>
+                            <td class="mdl-data-table__cell--non-numeric">#{copia.usuario.matricula}</td>
+                            <td class="mdl-data-table__cell--non-numeric">#{copia.usuario.nome}</td>
+                            <td class="mdl-data-table__cell--non-numeric">#{copia.usuario.acesso}</td>
+                            <td>#{copia.quantidade}</td>
+                            <td class="mdl-data-table__cell--non-numeric">#{formatador.formatarData(copia.data_copia)}</td>
+                        </tr>
+                    </ui:repeat>
+                </tbody>
+            </table>
+        </center>
+    </h:body>
+</ui:composition>

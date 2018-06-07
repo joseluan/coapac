@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <center>
+        <!-- retornar -->
+        <p:commandButton actionListener="#{ emprestimoBean.previous}" title="Voltar" value="«"
+                         disabled="#{emprestimoBean.paginacao.paginaAtual == 0}"
+                         ajax="false"/>
+        <!-- fim retornar -->
+        <p:commandButton action="#{emprestimoBean.changePage}" value="#{emprestimoBean.paginacao.paginaAtual}" 
+                         rendered="#{emprestimoBean.paginacao.paginaAtual > 0}" 
+                         title="Página #{ emprestimoBean.paginacao.paginaAtual} de #{ emprestimoBean.paginacao.totalPaginas}"
+                         ajax="false" >
+            <f:param name="pagina" value="#{emprestimoBean.paginacao.paginaAtual - 1}"/>
+        </p:commandButton>
+        <!-- pagina atual -->
+        <p:commandButton value="#{ emprestimoBean.paginacao.paginaAtual + 1}"
+                         title="Página #{ emprestimoBean.paginacao.paginaAtual + 1} de #{ emprestimoBean.paginacao.totalPaginas}"
+                         style="border: rgb(255,82,82) solid 2px;"/>
+        <!-- fim pagina atual -->
+        <p:commandButton action="#{emprestimoBean.changePage}"
+                         value="#{ emprestimoBean.paginacao.paginaAtual + 2 }" 
+                         rendered="#{emprestimoBean.paginacao.paginaAtual != (emprestimoBean.paginacao.totalPaginas - 1)}"
+                         title="Página #{ emprestimoBean.paginacao.paginaAtual + 2} de #{ emprestimoBean.paginacao.totalPaginas}"
+                         ajax="false">
+            <f:param name="pagina" value="#{emprestimoBean.paginacao.paginaAtual + 1}"/>
+        </p:commandButton>
+        <!-- avançar -->
+        <p:commandButton title="Avançar" actionListener="#{emprestimoBean.next}" 
+                         disabled="#{emprestimoBean.paginacao.paginaAtual == (emprestimoBean.paginacao.totalPaginas - 1)}" value="»" 
+                         ajax="false"/>
+        <!-- fim avançar -->
+    </center>
+</ui:composition>

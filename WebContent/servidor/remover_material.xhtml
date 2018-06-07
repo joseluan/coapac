@@ -1,0 +1,81 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="conteudo">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h:form>
+                    <ui:include src="/autenticado/_buscar_material.xhtml"/>
+                    <h:commandButton class="mdl-button mdl-js-button mdl-button--primary" value="pesquisar"
+                                     action="#{ materialBean.listaFiltro }"
+                                     title="pesquisar um material">
+                        <f:setPropertyActionListener value="VERDADEIRO" target="#{materialBean.material.isAtivo}"/>
+                    </h:commandButton>
+                </h:form>
+            </div>
+        </div>
+        <center>
+            <h1>Remover um material</h1>
+            <h2>
+                <h:outputLabel styleClass="listaNULL" value="Sem Registros"
+                               rendered="#{empty materialBean.materiais}"/>
+            </h2>
+            <div class="mdl-grid">
+                <p:dataTable  value="#{ materialBean.materiais }" var="material" sortMode="multiple"
+                              id="lista" rendered="#{not empty materialBean.materiais}">
+                    <p:column headerText="Id" sortBy="#{material.id}">
+                        <h:outputText value="#{material.id}" />
+                    </p:column>
+
+                    <p:column headerText="Código" sortBy="#{material.codigo}">
+                        <h:outputText value="#{material.codigo}" />
+                    </p:column>
+
+                    <p:column headerText="Nome" sortBy="#{material.nome}">
+                        <h:outputText value="#{material.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Quantidade" sortBy="#{material.quantidade}">
+                        <h:outputText value="#{material.quantidade}" />
+                    </p:column>
+
+                    <p:column headerText="Descrição" sortBy="#{material.descricao}">
+                        <h:outputText value="#{material.descricao}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo" sortBy="#{material.tipo}">
+                        <h:outputText value="#{material.tipo}" />
+                    </p:column>
+
+                    <p:column headerText="Código" sortBy="#{material.codigo}">
+                        <h:outputText value="#{material.codigo}" rendered="#{material.codigo != null}"/>
+                    </p:column>
+
+                    <p:column headerText="Excluir">
+                        <h:form>
+                            <center>
+                                <p:commandButton icon="ui-icon-trash" value="Excluir material"
+                                                 action="#{materialBean.remover(material)}"
+                                                 update="@all"
+                                                 title="Excluir o material #{material.nome}">
+                                    <p:confirm header="Confirmar" message="Você tem certeza de excluir?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </center>
+                        </h:form>
+                    </p:column>
+                </p:dataTable>
+                <br/>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </div>
+            <h:form rendered="#{ not empty materialBean.materiais}" id="formPaginacao">
+                <ui:include src="/autenticado/_paginacao_material.xhtml"/>
+            </h:form>
+        </center>
+    </ui:define>
+</ui:composition>

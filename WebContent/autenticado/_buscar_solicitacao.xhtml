@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <h:inputText class="mdl-textfield__input" id="nome"
+                     value="#{ emprestimoBean.emprestimo.material.nome }"/>
+        <label class="mdl-textfield__label" for="nome">Nome do Material...</label>
+    </div>
+    
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <h:inputText class="mdl-textfield__input" id="codigo"
+                     value="#{ emprestimoBean.emprestimo.material.codigo}"/>
+        <label class="mdl-textfield__label" for="codigo">Código do Material...</label>
+    </div>
+    
+    <p:outputLabel  value="Material é ativo:"
+                    style="padding: 15px;"/>
+    <p:selectOneMenu id="ativo" value="#{emprestimoBean.emprestimo.material.isAtivo}" 
+                     style="width:125px;top: 10px; margin-right: 15px;">
+        <f:selectItem itemLabel="Verdadeiro" itemValue="VERDADEIRO" />
+        <f:selectItem itemLabel="Falso" itemValue="FALSO" />
+        <f:selectItem itemLabel="Ambos" itemValue="AMBOS" />
+    </p:selectOneMenu>
+</ui:composition>

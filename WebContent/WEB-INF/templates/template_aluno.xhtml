@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="author" content="José Luan Silva do Nascimento"/>
+
+        <title>COAPAC - JC</title>
+        
+        <c:set var="ctx" value="coapac"/>
+        <c:set var="acesso" value="aluno"/>
+        
+        <link rel="shortcut icon" href="/${ctx}/arquivos/img/logo_pequeno.png" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <link rel="stylesheet" href="/${ctx}/arquivos/css/material.min.css"/>
+        <link rel="stylesheet" href="/${ctx}/arquivos/css/meu_css.css"/>
+        <script src="/${ctx}/arquivos/js/material.min.js"></script>
+    </h:head>
+    <h:body>
+        <p:growl id="messages"/>
+        <p:tooltip />
+
+        <p:menubar style="box-shadow: 0px 0px 25px 1px #{emprestimoBean.corBarraInadimplente};">
+<p:menuitem value="Inicio" 
+                        outcome="/${acesso}/inicio"
+                        title="Tela de inicio"/>
+            <p:submenu label="Empréstimo">
+                <p:menuitem value="Solicitar" outcome="/${acesso}/emprestimo_material" 
+                            icon="ui-icon-arrowrefresh-1-w" title="solicitar um empréstimo de material"/>
+                <p:menuitem value="Remover solicitações" outcome="/${acesso}/minhas_solicitacoes_material" 
+                            icon="ui-icon-close" 
+                            title="remover minhas solicitações de material"/>
+            </p:submenu>
+            <p:menuitem value="Minhas informações" outcome="/${acesso}/minhas_informacoes" 
+                        icon="ui-icon-document" title="informações detalhadas sobre min"/>
+            <f:facet name="options">
+                <p:commandButton action="#{ loginBean.logoff }" 
+                                 value="Sair" 
+                                 icon="ui-icon-extlink"
+                                 title="sair do sistema"/>
+            </f:facet>
+        </p:menubar>
+        <div class="mdl-js-layout">
+            <ui:insert name="conteudo">
+                Espaço para o conteúdo da tela
+            </ui:insert>
+        </div>
+    </h:body>
+</html>
