@@ -20,12 +20,12 @@ import javax.validation.constraints.NotNull;
  * @author Luan
  */
 @Entity
-public class Copia implements Serializable{
+public class Copia implements Serializable, EntidadePersistivel{
 	private static final long serialVersionUID = 4675364990448500469L;
 
 	@Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     
     @Column(nullable = false)
     @NotNull
@@ -39,12 +39,14 @@ public class Copia implements Serializable{
     @Temporal(javax.persistence.TemporalType.DATE)
     @NotNull
     private Date data_copia;
-
-    public int getId() {
+    
+    @Override
+    public Integer getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    @Override
+    public void setId(Integer id) {
         this.id = id;
     }
 

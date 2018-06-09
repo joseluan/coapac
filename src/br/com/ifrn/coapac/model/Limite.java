@@ -17,24 +17,26 @@ import javax.persistence.Id;
  */
 
 @Entity
-public class Limite implements Serializable{
+public class Limite implements Serializable, EntidadePersistivel{
 	private static final long serialVersionUID = -2569031938436464893L;
 
 	@Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     
     @Column(nullable = false)
     private String nome;
     
     @Column(nullable = false)
     private int quantidade;
-
-    public int getId() {
+    
+    @Override
+    public Integer getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    @Override
+    public void setId(Integer id) {
         this.id = id;
     }
 

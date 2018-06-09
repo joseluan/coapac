@@ -5,9 +5,6 @@
  */
 package br.com.ifrn.coapac.mbean;
 
-import br.com.ifrn.coapac.dao.CopiaDAO;
-import br.com.ifrn.coapac.dao.EmprestimoDAO;
-import br.com.ifrn.coapac.dao.UsuarioDAO;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import br.com.ifrn.coapac.model.Copia;
 import br.com.ifrn.coapac.model.Emprestimo;
 import br.com.ifrn.coapac.model.Usuario;
+import br.com.ifrn.coapac.service.NegocioCopia;
+import br.com.ifrn.coapac.service.NegocioEmprestimo;
+import br.com.ifrn.coapac.service.NegocioUsuario;
 import br.com.ifrn.coapac.utils.AbstractController;
 import br.com.ifrn.coapac.utils.Criptografia;
 import br.com.ifrn.coapac.utils.PagingInformation;
@@ -31,7 +31,8 @@ import br.com.ifrn.coapac.utils.PagingInformation;
 @ManagedBean
 @ViewScoped
 public class UsuarioBean extends AbstractController implements Serializable {
-	private static final long serialVersionUID = 1440760232114934887L;
+	private static final long serialVersionUID = 4902621834665480959L;
+	
 	private Usuario usuario = new Usuario();
     private Usuario usuario_busca;
     private int copia;
@@ -47,18 +48,15 @@ public class UsuarioBean extends AbstractController implements Serializable {
     public PagingInformation paginacao = new PagingInformation(0, QTD_CODIGOS);
 
     public String atualizar() {
-    	EntityManager gerenciador = this.getEntityManager();
-        UsuarioDAO uDAO = new UsuarioDAO(gerenciador);
-
+    	NegocioUsuario negocio = this.getMyNegocio();
         usuario.setSenha(Criptografia.esconderMD5(usuario.getSenha()));
-        uDAO.merge(usuario);
+        negocio.merge(usuario);
         return null;
     }
 
     public String atualizar(Usuario user) {
-    	EntityManager gerenciador = this.getEntityManager();
-        UsuarioDAO uDAO = new UsuarioDAO(gerenciador);
-        uDAO.merge(user);
+    	NegocioUsuario negocio = this.getMyNegocio();
+    	negocio.merge(user);
         if (usuario_session.getId() == user.getId()) {
             //--- Mudando a Session
             getCurrentSession().removeAttribute("usuario");
@@ -66,23 +64,56 @@ public class UsuarioBean extends AbstractController implements Serializable {
         }
         return null;
     }
-
+    
+    //NEGOCIO EMPRESTIMO 
     public List<Emprestimo> getEmprestimosPara() {
     	EntityManager gerenciador = this.getEntityManager();
-        EmprestimoDAO eDAO = new EmprestimoDAO(gerenciador);
-		List<Emprestimo> lista = eDAO.minhaLista(usuario_session, usuario_busca, 0);
+    	NegocioEmprestimo negocio = new NegocioEmprestimo(gerenciador);
+		List<Emprestimo> lista = negocio.minhaLista(usuario_session, usuario_busca, 0);
         return lista;
     }
-
+    
+    //NEGOCIO COPIA
     public List<Copia> getCopiasPara() {
     	EntityManager gerenciador = this.getEntityManager();
-        CopiaDAO cDAO = new CopiaDAO(gerenciador);
-		List<Copia> lista = cDAO.minhaLista(usuario_session, usuario_busca, 0);
+    	NegocioCopia negocio = new NegocioCopia(gerenciador);
+		List<Copia> lista = negocio.minhaLista(usuario_session, usuario_busca, 0);
         return lista;
     }
+    
+    public String listaFiltro() {
+    	NegocioUsuario negocio = this.getMyNegocio();
+        usuarios = negocio.lista(usuario, paginacao);
+        return null;
+    }
 
+    public String buscarFiltro() {
+    	NegocioUsuario negocio = this.getMyNegocio();
+        usuario_busca = negocio.getUsuario(usuario);
+        return null;
+    }
+    
+    public NegocioUsuario getMyNegocio(){
+    	EntityManager gerenciador = this.getEntityManager();
+    	return new NegocioUsuario(gerenciador);
+    }
+    
     /**
-     * Mï¿½todo chamado para redirecionar para a prï¿½xima pï¿½gina da paginaï¿½ï¿½o,
+     * Possibilita o acesso ao EntityManager.
+     * @return EntityManager
+     */
+    private EntityManager getEntityManager(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
+        
+        return manager;
+    }
+    
+    
+    /**
+     * Mrétodo chamado para redirecionar para a prï¿½xima pï¿½gina da paginaï¿½ï¿½o,
      * referente ï¿½ listagem de publicaï¿½ï¿½es.
      *
      * @return
@@ -116,29 +147,6 @@ public class UsuarioBean extends AbstractController implements Serializable {
         paginacao.setPaginaAtual(pagina);
         listaFiltro();
         return null;
-    }
-
-    public String listaFiltro() {
-    	EntityManager gerenciador = this.getEntityManager();
-        UsuarioDAO uDAO = new UsuarioDAO(gerenciador);
-        usuarios = uDAO.lista(usuario, paginacao);
-        return null;
-    }
-
-    public String buscarFiltro() {
-    	EntityManager gerenciador = this.getEntityManager();
-        UsuarioDAO uDAO = new UsuarioDAO(gerenciador);
-        usuario_busca = uDAO.getUsuario(usuario);
-        return null;
-    }
-    
-    private EntityManager getEntityManager(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
-        
-        return manager;
     }
 
     //GET E SET

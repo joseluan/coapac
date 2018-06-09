@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Postagem implements Serializable{
+public class Postagem implements Serializable, EntidadePersistivel{
 	private static final long serialVersionUID = 6184950579369387533L;
 
 	@Id
@@ -39,15 +39,17 @@ public class Postagem implements Serializable{
     
     @Transient
     private Resposta novaResposta;
-
+    
     public Postagem() {
         novaResposta = new Resposta();
     }
-
+    
+    @Override
     public Integer getId() {
         return id;
     }
-
+    
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }

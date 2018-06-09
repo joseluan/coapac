@@ -1,12 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+r5 * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package br.com.ifrn.coapac.mbean;
 
-import br.com.ifrn.coapac.dao.EmprestimoDAO;
-import br.com.ifrn.coapac.dao.MaterialDAO;
 import br.com.ifrn.coapac.model.Ativo;
 import java.io.Serializable;
 import java.util.List;
@@ -18,6 +16,9 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
 import br.com.ifrn.coapac.model.Material;
+import br.com.ifrn.coapac.service.NegocioEmprestimo;
+import br.com.ifrn.coapac.service.NegocioMaterial;
+
 import org.primefaces.context.RequestContext;
 import br.com.ifrn.coapac.utils.AbstractController;
 import br.com.ifrn.coapac.utils.PagingInformation;
@@ -30,7 +31,8 @@ import br.com.ifrn.coapac.utils.ValidatorUtil;
 @ManagedBean
 @ViewScoped
 public class MaterialBean extends AbstractController implements Serializable{
-	private static final long serialVersionUID = -2222784099172890501L;
+	private static final long serialVersionUID = 7694432577145366300L;
+	
 	private Material material = new Material();
     private List<Material> materiais;
     private Material materialSelecionado = new Material();
@@ -44,53 +46,49 @@ public class MaterialBean extends AbstractController implements Serializable{
     public PagingInformation paginacao = new PagingInformation(0, QTD_CODIGOS);
     
     public int getQtdMaterial() {
-    	EntityManager gerenciador = this.getEntityManager();
-        MaterialDAO mDAO = new MaterialDAO(gerenciador);
-        int quantidade = mDAO.qtd();
+    	NegocioMaterial negocio = this.getMyNegocio();
+        int quantidade = negocio.qtd();
         return quantidade;
     }
 
     public String listaFiltro() {
-    	EntityManager gerenciador = this.getEntityManager();
-        MaterialDAO mDAO = new MaterialDAO(gerenciador);
+    	NegocioMaterial negocio = this.getMyNegocio();
         if (ValidatorUtil.isNotEmpty(materiais)) {
             if (materiais.size() == 1) {
                  paginacao.setPaginaAtual(0);
             }
         }
-        materiais = mDAO.buscarFiltro(usuario_session,material,paginacao);
+        materiais = negocio.buscarFiltro(usuario_session,material,paginacao);
         return null;
     }
     
     public String remover(Material material_rm) {
-    	EntityManager gerenciador = this.getEntityManager();
-        MaterialDAO mDAO = new MaterialDAO(gerenciador);
-        mDAO.remove(material_rm.getId());
+    	NegocioMaterial negocio = this.getMyNegocio();
+    	negocio.remove(material_rm.getId());
         listaFiltro();
         return null;
     }
 
     public String adicionar() throws InterruptedException {
-    	EntityManager gerenciador = this.getEntityManager();
-        MaterialDAO mDAO = new MaterialDAO(gerenciador);
+    	NegocioMaterial negocio = this.getMyNegocio();
         material.setIsAtivo(Ativo.VERDADEIRO);
-        mDAO.persist(material);
+        negocio.persist(material);
         material = new Material();
         return null;
     }
     
+    //NEGOCIO EMPRESTIMO
 	public String adicionarEmprestimo() throws InterruptedException {
     	EntityManager gerenciador = this.getEntityManager();
-        EmprestimoDAO eDAO = new EmprestimoDAO(gerenciador);
-        eDAO.persist(usuario_session, materialSelecionado);
+        NegocioEmprestimo negocio = new NegocioEmprestimo(gerenciador);
+        negocio.persist(usuario_session, materialSelecionado);
         listaFiltro();
         return null;
     }
 
     public String atualizar() {
-    	EntityManager gerenciador = this.getEntityManager();
-        MaterialDAO mDAO = new MaterialDAO(gerenciador);
-        mDAO.merge(materialSelecionado);
+    	NegocioMaterial negocio = this.getMyNegocio();
+    	negocio.merge(materialSelecionado);
         listaFiltro();
         return null;
     }
@@ -139,6 +137,15 @@ public class MaterialBean extends AbstractController implements Serializable{
         return null;
     }
     
+    public NegocioMaterial getMyNegocio(){
+    	EntityManager gerenciador = this.getEntityManager();
+    	return new NegocioMaterial(gerenciador);
+    }
+    
+    /**
+     * Possibilita o acesso ao EntityManager.
+     * @return EntityManager
+     */
     private EntityManager getEntityManager(){
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();

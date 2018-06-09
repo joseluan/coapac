@@ -21,12 +21,12 @@ import javax.persistence.Temporal;
  * @author Luan
  */
 @Entity
-public class Emprestimo implements Serializable{
-	private static final long serialVersionUID = -3665624285487218889L;
+public class Emprestimo implements Serializable, EntidadePersistivel{
+	private static final long serialVersionUID = 1657109190048536160L;
 
 	@Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     
     @ManyToOne
     private Usuario usuario_emp;
@@ -53,12 +53,14 @@ public class Emprestimo implements Serializable{
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoSolicitacao solicitacao;
-
-    public int getId() {
+    
+    @Override
+    public Integer getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    @Override
+    public void setId(Integer id) {
         this.id = id;
     }
 

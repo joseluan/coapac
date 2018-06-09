@@ -11,13 +11,13 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Material implements Serializable{
+public class Material implements Serializable, EntidadePersistivel{
 	private static final long serialVersionUID = -741578570814305217L;
 
 	@Id
     @GeneratedValue
     @Column(nullable = false)
-    private int id;
+    private Integer id;
     
     @Column(nullable = false)
     @NotNull(message = "Informe o nome do material")
@@ -43,12 +43,14 @@ public class Material implements Serializable{
     
     @Transient
     private Integer qtdEmprestimos;
-
-    public int getId() {
+    
+    @Override
+    public Integer getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    @Override
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -5,7 +5,6 @@
  */
 package br.com.ifrn.coapac.mbean;
 
-import br.com.ifrn.coapac.dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
 import br.com.ifrn.coapac.model.Usuario;
+import br.com.ifrn.coapac.service.NegocioUsuario;
 import br.com.ifrn.coapac.utils.API;
 import br.com.ifrn.coapac.utils.AbstractController;
 import br.com.ifrn.coapac.utils.ValidatorUtil;
@@ -27,12 +27,13 @@ import br.com.ifrn.coapac.utils.ValidatorUtil;
 @ManagedBean
 public class LoginBean extends AbstractController implements Serializable{
 	private static final long serialVersionUID = 8417927434645739208L;
+	
 	private Usuario usuario = new Usuario();
     
     @SuppressWarnings("incomplete-switch")
 	public String login() throws IOException {
     	EntityManager gerenciador = this.getEntityManager();
-        UsuarioDAO uDAO = new UsuarioDAO(gerenciador);
+        NegocioUsuario negocio = new NegocioUsuario(gerenciador);
         boolean userInSUAP;
         boolean login = false;
         HashMap<String, String> meus_dados = null;
@@ -58,17 +59,17 @@ public class LoginBean extends AbstractController implements Serializable{
         
         try {
             //proucura no banco de dados o usuário
-            Usuario u_banco = uDAO.buscarPorLoginESenha(usuario.getMatricula(),
+            Usuario u_banco = negocio.buscarPorLoginESenha(usuario.getMatricula(),
                                                         usuario.getSenha());
            
             if (!ValidatorUtil.isEmpty(u_banco) && userInSUAP) {
                 //atualizando os dados
                 u_banco.setSenha(usuario.getSenha());
-                usuario = uDAO.merge(u_banco,meus_dados);
+                usuario = negocio.merge(u_banco,meus_dados);
                 login = true;
             }else if(userInSUAP){
                 //cadastrando usuario
-                usuario = uDAO.persist(usuario,meus_dados);
+                usuario = negocio.persist(usuario,meus_dados);
                 login = true;
             }else if(!ValidatorUtil.isEmpty(u_banco)){
                 //se estiver sem internet
@@ -109,6 +110,10 @@ public class LoginBean extends AbstractController implements Serializable{
                 !ValidatorUtil.isEmpty(usuario.getSenha());
     }
     
+    /**
+     * Possibilita o acesso ao EntityManager.
+     * @return EntityManager
+     */
     private EntityManager getEntityManager(){
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();

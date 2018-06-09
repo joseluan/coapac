@@ -5,9 +5,9 @@
  */
 package br.com.ifrn.coapac.mbean;
 
-import br.com.ifrn.coapac.dao.PostagemDAO;
 import br.com.ifrn.coapac.model.Postagem;
 import br.com.ifrn.coapac.model.Usuario;
+import br.com.ifrn.coapac.service.NegocioPostagem;
 import br.com.ifrn.coapac.utils.AbstractController;
 
 import javax.faces.bean.ManagedBean;
@@ -28,23 +28,22 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 @ManagedBean
 public class PostagemBean extends AbstractController implements Serializable{
-	private static final long serialVersionUID = -2467233559358128533L;
+	private static final long serialVersionUID = -1830894869051510119L;
+	
 	Postagem postagem = new Postagem();
     Postagem postagemSelecionada = new Postagem();
     
     public String adicionar() {
-    	EntityManager gerenciador = this.getEntityManager();
-        PostagemDAO dao = new PostagemDAO(gerenciador);
-        dao.persist(usuario_session, postagem);
+    	NegocioPostagem negocio = this.getMyNegocio();
+    	negocio.persist(usuario_session, postagem);
         addMsgInfo("Postagem Cadastrada!");
         postagem = new Postagem();
         return "/autenticado/mural";
     }
 
     public String atualizar() {
-    	EntityManager gerenciador = this.getEntityManager();
-        PostagemDAO dao = new PostagemDAO(gerenciador);
-        dao.merge(postagemSelecionada);
+    	NegocioPostagem negocio = this.getMyNegocio();
+    	negocio.merge(postagemSelecionada);
         addMsgInfo("Postagem Atualizada !");
         return null;
     }
@@ -57,34 +56,39 @@ public class PostagemBean extends AbstractController implements Serializable{
     }
 
     public String remover() {
-    	EntityManager gerenciador = this.getEntityManager();
-        PostagemDAO dao = new PostagemDAO(gerenciador);
-        dao.remove(postagem.getId());
+    	NegocioPostagem negocio = this.getMyNegocio();
+    	negocio.remove(postagem.getId());
         postagem = new Postagem();
         addMsgWarning("Resposta removida !");
         return null;
     }
     
     public String remover(Postagem p) {
-    	EntityManager gerenciador = this.getEntityManager();
-        PostagemDAO dao = new PostagemDAO(gerenciador);
-        dao.remove(p.getId());
+    	NegocioPostagem negocio = this.getMyNegocio();
+    	negocio.remove(p.getId());
         addMsgWarning("Resposta removida !");
         return null;
     }
     
     public List<Postagem> getListaMinhasPostagems(){
-    	EntityManager gerenciador = this.getEntityManager();
-        PostagemDAO dao = new PostagemDAO(gerenciador);
-        return dao.minhasPostagems(usuario_session);
+    	NegocioPostagem negocio = this.getMyNegocio();
+        return negocio.minhasPostagems(usuario_session);
     }
     
     public List<Postagem> getTodasPostagems(){
-    	EntityManager gerenciador = this.getEntityManager();
-        PostagemDAO dao = new PostagemDAO(gerenciador);
-        return dao.todasPostagems();
+    	NegocioPostagem negocio = this.getMyNegocio();
+        return negocio.todasPostagems();
     }
     
+    public NegocioPostagem getMyNegocio(){
+    	EntityManager gerenciador = this.getEntityManager();
+    	return new NegocioPostagem(gerenciador);
+    }
+    
+    /**
+     * Possibilita o acesso ao EntityManager.
+     * @return EntityManager
+     */
     private EntityManager getEntityManager(){
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
-public class Resposta implements Serializable {
+public class Resposta implements Serializable, EntidadePersistivel {
 	private static final long serialVersionUID = 3846112981795091048L;
 
 	@Id
@@ -46,11 +46,13 @@ public class Resposta implements Serializable {
     private Date data_conclusao;
     
     private boolean isConcluida;
-
+    
+    @Override
     public Integer getId() {
         return id;
     }
-
+    
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }

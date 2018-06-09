@@ -12,12 +12,12 @@ import javax.persistence.Temporal;
 import javax.persistence.Transient;
 
 @Entity
-public class Usuario implements Serializable{
+public class Usuario implements Serializable, EntidadePersistivel{
 	private static final long serialVersionUID = -7758997358119649578L;
 
 	@Id
     @GeneratedValue
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String nome;
@@ -48,12 +48,14 @@ public class Usuario implements Serializable{
     
     @Transient
     private boolean isSession;
-
-    public int getId() {
+    
+    @Override
+    public Integer getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    @Override
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -28,7 +28,8 @@ import org.primefaces.model.chart.ChartSeries;
 public class ChartView implements Serializable {
 	private static final long serialVersionUID = -4913075901615031151L;
 	private BarChartModel barModel;
-
+	
+	/*
     @PostConstruct
     public void init() {
         createBarModels();
@@ -71,7 +72,7 @@ public class ChartView implements Serializable {
         Axis yAxis = barModel.getAxis(AxisType.Y);
         yAxis.setLabel("Quantidade de solicitações");
         yAxis.setMin(0);
-    }
+    }*/
 
     private EntityManager getEntityManager() {
         FacesContext fc = FacesContext.getCurrentInstance();

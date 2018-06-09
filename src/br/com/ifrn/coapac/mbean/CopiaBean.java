@@ -5,7 +5,6 @@
  */
 package br.com.ifrn.coapac.mbean;
 
-import br.com.ifrn.coapac.dao.CopiaDAO;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import br.com.ifrn.coapac.model.Copia;
 import br.com.ifrn.coapac.model.Limite;
 import br.com.ifrn.coapac.model.Usuario;
+import br.com.ifrn.coapac.service.NegocioCopia;
 import br.com.ifrn.coapac.utils.AbstractController;
 import br.com.ifrn.coapac.utils.PagingInformation;
 import br.com.ifrn.coapac.utils.ValidatorUtil;
@@ -32,7 +32,7 @@ import java.util.Collections;
 @ManagedBean
 @ViewScoped
 public class CopiaBean extends AbstractController implements Serializable {
-	private static final long serialVersionUID = 6254933665221415978L;
+	private static final long serialVersionUID = -7411761261453740459L;
 	
 	private Usuario usuario = new Usuario();
     private Copia copia = new Copia();
@@ -52,62 +52,55 @@ public class CopiaBean extends AbstractController implements Serializable {
 
     @PostConstruct
     public void init() {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
-        limiteALUNO = dao.getLimite(1);
-        limiteSERVIDOR = dao.getLimite(2);
+    	NegocioCopia negocio = this.getMyNegocio();
+        limiteALUNO = negocio.getLimite(1);
+        limiteSERVIDOR = negocio.getLimite(2);
         paginacao = new PagingInformation(0, QTD_CODIGOS);
     }
 
     public List<Copia> getMinhasCopias() {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
-        List<Copia> lista = dao.minhaLista(usuario_session, null, 0);
+    	NegocioCopia negocio = this.getMyNegocio();
+        List<Copia> lista = negocio.minhaLista(usuario_session, null, 0);
         return lista;
     }
 
     public List<Copia> getMinhasCopiasLimite() {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
-        List<Copia> lista = dao.minhaLista(usuario_session, null, 5);
+    	NegocioCopia negocio = this.getMyNegocio();
+        List<Copia> lista = negocio.minhaLista(usuario_session, null, 5);
         Collections.reverse(lista);
         return lista;
     }
 
     public List<Limite> getLimites() {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
-        List<Limite> lista = dao.listaLimite();
+    	NegocioCopia negocio = this.getMyNegocio();
+        List<Limite> lista = negocio.listaLimite();
         return lista;
     }
 
     public String listaFiltro() {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
+    	NegocioCopia negocio = this.getMyNegocio();
         if (ValidatorUtil.isNotEmpty(copias)) {
             if (copias.size() == 1) {
                 paginacao.setPaginaAtual(0);
             }
         }
         if (ValidatorUtil.isNotEmpty(inicio) && ValidatorUtil.isNotEmpty(fim)) {
-            copias = dao.buscarFiltro(usuario, paginacao, inicio, fim);
+            copias = negocio.buscarFiltro(usuario, paginacao, inicio, fim);
         } else {
-            copias = dao.buscarFiltro(usuario, paginacao);
+            copias = negocio.buscarFiltro(usuario, paginacao);
         }
         return null;
     }
 
     public String atualizar(Limite limite) {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
-        dao.mergeLimite(limite);
+    	NegocioCopia negocio = this.getMyNegocio();
+    	negocio.mergeLimite(limite);
         return null;
     }
 
     public String remover(Copia copia_rm) {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
-        dao.remove(copia_rm);
+    	NegocioCopia negocio = this.getMyNegocio();
+    	negocio.remove(copia_rm);
         //--- Mudando a Session
         usuario_session.setQuantidade_copia(usuario_session.getQuantidade_copia()
                 + copia_rm.getQuantidade());
@@ -119,8 +112,7 @@ public class CopiaBean extends AbstractController implements Serializable {
     }
 
     public String adicionar() {
-    	EntityManager gerenciador = this.getEntityManager();
-    	CopiaDAO dao = new CopiaDAO(gerenciador);
+    	NegocioCopia negocio = this.getMyNegocio();
         if (copia.getQuantidade() <= usuario_session.getQuantidade_copia() &&
             copia.getQuantidade() != 0) {
 
@@ -131,8 +123,8 @@ public class CopiaBean extends AbstractController implements Serializable {
                 usuario.setQuantidade_copia(usuario.getQuantidade_copia()-copia.getQuantidade());
             }
             //Persistindo
-            dao.persist(usuario_session, copia);
-            addMsgInfo(copia.getQuantidade()+" cÃ³pias adicionadas");
+            negocio.persist(usuario_session, copia);
+            addMsgInfo(copia.getQuantidade()+" cópias adicionadas");
             //--- Mudando a Session
             if (usuario_session.getId() == copia.getUsuario().getId()) {
                 getCurrentSession().removeAttribute("usuario");
@@ -180,6 +172,15 @@ public class CopiaBean extends AbstractController implements Serializable {
         return null;
     }
     
+    public NegocioCopia getMyNegocio(){
+    	EntityManager gerenciador = this.getEntityManager();
+    	return new NegocioCopia(gerenciador);
+    }
+    
+    /**
+     * Possibilita o acesso ao EntityManager.
+     * @return EntityManager
+     */
     private EntityManager getEntityManager(){
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
