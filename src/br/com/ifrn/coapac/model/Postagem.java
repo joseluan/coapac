@@ -9,12 +9,14 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Postagem implements Serializable, EntidadePersistivel{
-	private static final long serialVersionUID = 6184950579369387533L;
+	private static final long serialVersionUID = -6131594435371564357L;
 
 	@Id
     @GeneratedValue
@@ -22,6 +24,9 @@ public class Postagem implements Serializable, EntidadePersistivel{
 
     @ManyToOne
     private Usuario usuario;
+    
+    @ManyToOne
+    private Usuario usuario_concluida;
     
     @Column(nullable=false)
     @NotNull(message="O titulo precisa ser preenchido!")
@@ -31,6 +36,11 @@ public class Postagem implements Serializable, EntidadePersistivel{
     
     @Column(nullable=false)
     private Date data_postagem;
+    
+    @Temporal(value=TemporalType.DATE)
+    private Date data_conclusao;
+    
+    private boolean isConcluida;
     
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
@@ -101,5 +111,29 @@ public class Postagem implements Serializable, EntidadePersistivel{
     public void setNovaResposta(Resposta novaResposta) {
         this.novaResposta = novaResposta;
     }
+
+	public Usuario getUsuario_concluida() {
+		return usuario_concluida;
+	}
+
+	public void setUsuario_concluida(Usuario usuario_concluida) {
+		this.usuario_concluida = usuario_concluida;
+	}
+
+	public Date getData_conclusao() {
+		return data_conclusao;
+	}
+
+	public void setData_conclusao(Date data_conclusao) {
+		this.data_conclusao = data_conclusao;
+	}
+
+	public boolean isConcluida() {
+		return isConcluida;
+	}
+
+	public void setConcluida(boolean isConcluida) {
+		this.isConcluida = isConcluida;
+	}
     
 }

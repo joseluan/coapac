@@ -11,10 +11,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
 
 import br.com.ifrn.coapac.model.Copia;
 import br.com.ifrn.coapac.model.Limite;
@@ -38,6 +35,7 @@ public class CopiaBean extends AbstractController implements Serializable {
     private Copia copia = new Copia();
     private Limite limiteALUNO = new Limite();
     private Limite limiteSERVIDOR = new Limite();
+    private Limite limiteMESGERAL = new Limite();
     private List<Copia> copias;
     private Date inicio;
     private Date fim;
@@ -55,6 +53,7 @@ public class CopiaBean extends AbstractController implements Serializable {
     	NegocioCopia negocio = this.getMyNegocio();
         limiteALUNO = negocio.getLimite(1);
         limiteSERVIDOR = negocio.getLimite(2);
+        limiteMESGERAL = negocio.getLimite(3);
         paginacao = new PagingInformation(0, QTD_CODIGOS);
     }
 
@@ -177,19 +176,6 @@ public class CopiaBean extends AbstractController implements Serializable {
     	return new NegocioCopia(gerenciador);
     }
     
-    /**
-     * Possibilita o acesso ao EntityManager.
-     * @return EntityManager
-     */
-    private EntityManager getEntityManager(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
-        
-        return manager;
-    }
-    
     //GET e SET
     public Copia getCopia() {
         return copia;
@@ -255,4 +241,16 @@ public class CopiaBean extends AbstractController implements Serializable {
         this.paginacao = paginacao;
     }
 
+	public Limite getLimiteMESGERAL() {
+		return limiteMESGERAL;
+	}
+
+	public void setLimiteMESGERAL(Limite limiteMES_GERAL) {
+		this.limiteMESGERAL = limiteMES_GERAL;
+	}
+
+	public static int getQtdCodigos() {
+		return QTD_CODIGOS;
+	}
+    
 }

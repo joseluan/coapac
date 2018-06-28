@@ -5,81 +5,80 @@
  */
 package br.com.ifrn.coapac.mbean;
 
-import br.com.ifrn.coapac.dao.EmprestimoDAO;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
-import br.com.ifrn.coapac.model.Material;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.LineChartModel;
+
+import br.com.ifrn.coapac.service.NegocioCopia;
+import br.com.ifrn.coapac.utils.AbstractController;
 
 /**
  *
  * @author Luan
  */
 @ManagedBean
-public class ChartView implements Serializable {
-	private static final long serialVersionUID = -4913075901615031151L;
-	private BarChartModel barModel;
-	
-	/*
-    @PostConstruct
-    public void init() {
-        createBarModels();
-    }
+public class ChartView extends AbstractController implements Serializable {
+	private static final long serialVersionUID = -3672316628230453287L;
+	private LineChartModel lineModel2;
 
-    public BarChartModel getBarModel() {
-        return barModel;
-    }
+	@PostConstruct
+	public void init() {
+		createLineModels();
+	}
 
-    private BarChartModel initBarModel() {
-    	EntityManager gerenciador = this.getEntityManager();
-        EmprestimoDAO empDAO = new EmprestimoDAO(gerenciador);
+	public LineChartModel getLineModel2() {
+		return lineModel2;
+	}
 
-        BarChartModel model = new BarChartModel();
+	private void createLineModels() {
+		lineModel2 = initCategoryModel();
+		lineModel2.setTitle("Grafico da quantidade geral de copias pelos ultimos 6 meses");
+		lineModel2.setLegendPosition("e");
+		lineModel2.setShowPointLabels(true);
+		lineModel2.getAxes().put(AxisType.X, new CategoryAxis("Meses"));
+		Axis yAxis = lineModel2.getAxis(AxisType.Y);
+		yAxis.setLabel("Quantidade");
+		yAxis.setMin(0);
+	}
 
-        ChartSeries materiais = new ChartSeries();
-        materiais.setLabel("Materiais");
-        List<Material> lista = empDAO.buscarQuantidadeSolicitacoesMaterial(10);
-        lista.forEach((_item) -> {
-            materiais.set(_item.getNome(), _item.getQuantidade());
-        });
-        
-        model.addSeries(materiais);
-        return model;
-    }
+	private LineChartModel initCategoryModel() {
+		LineChartModel model = new LineChartModel();
 
-    private void createBarModels() {
-        createBarModel();
-    }
+		String[] meses = {"", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro",
+				"Outubro", "Novembro", "Dezembro" };
+		ChartSeries linha = new ChartSeries();
+		NegocioCopia negocio = new NegocioCopia(getEntityManager());
+		linha.setLabel("Quantidade de cópias");
 
-    private void createBarModel() {
-        barModel = initBarModel();
+		List<Object[]> lista = negocio.buscarListaGrafico();
+		HashMap grafico = new HashMap<String, Integer>();
+		for(Object[] objs: lista){
+			int cont = 0;
+			int mes = 0;
+			int ano = 0;
+			int quantidade = 0;
+			for(Object item : objs){
+				if(cont == 1) quantidade = Integer.parseInt(item.toString());
+				if(cont == 0) mes = Integer.parseInt(item.toString());
+				if(cont == 2) ano = Integer.parseInt(item.toString());
+				cont++;
+			}
+			if(grafico.keySet().contains((meses[mes]))) quantidade += (int) grafico.get((meses[mes]));
+			linha.set(meses[mes]+", "+ano, quantidade);
+			grafico.put(meses[mes], quantidade);
+		}
 
-        barModel.setTitle("Materiais mais solicitados e deferidos");
-        barModel.setLegendPosition("ne");
-
-        Axis xAxis = barModel.getAxis(AxisType.X);
-        xAxis.setLabel("Material");
-
-        Axis yAxis = barModel.getAxis(AxisType.Y);
-        yAxis.setLabel("Quantidade de solicitaÃ§Ãµes");
-        yAxis.setMin(0);
-    }*/
-
-    private EntityManager getEntityManager() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        EntityManager manager = (EntityManager) request.getAttribute("EntityManager");
-
-        return manager;
-    }
+		model.addSeries(linha);
+		return model;
+	}
 }

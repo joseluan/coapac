@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	<div class="mdl-cell mdl-cell--6-col postagem">
+		<!-- INFORMAÇÕES SOBRE A POSTAGEM -->
+		<div class="infor">
+			<h:outputLabel value="#{ postagem.usuario.nome }" />
+			- publicado em:
+			<h:outputLabel
+				value="#{ formatador.formatarDataHora(postagem.data_postagem) }" />
+		</div>
+		<h:panelGroup
+			rendered="#{postagemBean.usuario_session.id == postagem.usuario.id}">
+			<div class="opcoes_postagem">
+				<h:form>
+					<p:commandButton update="lista_postagem" icon="ui-icon-close"
+						value="excluir"
+						title="Remover a postagem com o id: #{postagem.id}"
+						action="#{ postagemBean.remover(postagem)}">
+						<p:confirm header="Confirmar"
+							message="Você tem certeza de excluir essa postagem?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton ajax="false" icon="ui-icon-pencil"
+						actionListener="#{postagemBean.selecionar(postagem)}"
+						title="Editar a postagem com o id: #{postagem.id}" value="editar" />
+				</h:form>
+			</div>
+		</h:panelGroup>
+		<br />
+		<!-- FIM - INFORMAÇÕES SOBRE A POSTAGEM -->
+		<div class="conteudo_postagem">
+			<h5>
+				<b><h:outputText value="#{ postagem.titulo }" /></b> <br /> <br />
+				<h:outputText value="#{ postagem.descricao }" />
+			</h5>
+		</div>
+		<div style="padding: 0px 50px 10px 50px;">
+			<!-- mostrando as respostas de cada pergunta -->
+			<h5>Respostas</h5>
+			<ui:repeat var="resposta"
+				value="#{ respostaBean.getLimiteRespostaByPergunta(postagem) }">
+				<div class="resposta">
+					<div class="infor">
+						<h:outputText
+							value=" publicado em: #{ formatador.formatarData(resposta.data_resposta) }
+															por #{ resposta.usuario.nome }" />
+					</div>
+					<h:panelGroup
+						rendered="#{postagemBean.usuario_session.id == resposta.usuario.id}">
+						<div class="opcoes_postagem">
+							<h:form>
+								<p:commandButton update="lista_postagem" icon="ui-icon-close"
+									title="Remover a resposta com o id: #{resposta.id}"
+									action="#{ respostaBean.remover(resposta)}"
+									style="width: 25px;height: 25px;">
+									<p:confirm header="Confirmar"
+										message="Você tem certeza de excluir essa resposta?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton ajax="false" icon="ui-icon-pencil"
+									style="width: 25px;height: 25px;"
+									actionListener="#{respostaBean.selecionar(resposta)}"
+									title="Editar a resposta com o id: #{resposta.id}" />
+							</h:form>
+						</div>
+					</h:panelGroup>
+					<br /> <br />
+					<h:outputText value="   #{ resposta.texto }" />
+				</div>
+			</ui:repeat>
+			<center>
+				<h:form>
+					<p:inputTextarea cols="30" rows="3"
+						value="#{ respostaBean.resposta.texto }"
+						placeholder="Insira sua resposta" id="Minha_resposta"
+						style="margin-top: 15px; width: 75%;">
+						<f:validateLength minimum="2" />
+					</p:inputTextarea>
+					<br />
+					<p:commandButton value="Responder" style="margin: 0px; width: 70%;">
+						<f:ajax event="click" execute="@form" render="lista_postagem"
+							listener="#{ respostaBean.adicionar(postagem) }" />
+					</p:commandButton>
+				</h:form>
+			</center>
+		</div>
+	</div>
+</ui:composition>

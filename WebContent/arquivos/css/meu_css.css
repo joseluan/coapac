@@ -53,15 +53,18 @@ and open the template in the editor.
     margin-bottom: 10px;
     background-color: #fff;
 }
-.conteudo_postagem{
+h5 {
 	position: relative;
 	font-size: 12pt;
+	font-family: cursive;
 }
 .conteudo_postagem p{
 	display: inline;
 }
 .infor{
  	float: left;
+ 	font-size: 9pt;
+ 	font-family: Arial, cursive;
 }
 .opcoes_postagem{
 	float: right;
@@ -74,4 +77,10 @@ and open the template in the editor.
 }
 .cabecalho_mural{
 	color: white;
+}
+.resposta{
+	border: #808080 solid 1px;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 3px;
 }

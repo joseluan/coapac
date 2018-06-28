@@ -12,10 +12,7 @@ import br.com.ifrn.coapac.utils.AbstractController;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.Serializable;
 import java.util.List;
@@ -51,7 +48,7 @@ public class PostagemBean extends AbstractController implements Serializable{
     public String selecionar(Postagem p){
         this.postagemSelecionada = p;
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('ModalEditar').show();");
+        context.execute("PF('ModalPostagem').show();");
         return null;
     }
 
@@ -84,20 +81,7 @@ public class PostagemBean extends AbstractController implements Serializable{
     	EntityManager gerenciador = this.getEntityManager();
     	return new NegocioPostagem(gerenciador);
     }
-    
-    /**
-     * Possibilita o acesso ao EntityManager.
-     * @return EntityManager
-     */
-    private EntityManager getEntityManager(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
-        
-        return manager;
-    }
-    
+
     //GET e SET
     public Postagem getPostagem() {
         return postagem;

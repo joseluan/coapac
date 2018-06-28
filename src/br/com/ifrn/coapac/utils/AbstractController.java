@@ -36,6 +36,19 @@ public abstract class AbstractController implements Serializable {
         FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, fm);
     }
+    
+    /**
+     * Possibilita o acesso ao EntityManager.
+     * @return EntityManager
+     */
+    protected EntityManager getEntityManager(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
+        
+        return manager;
+    }
 
     /**
      * Possibilita o acesso ao HttpServletRequest.

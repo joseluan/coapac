@@ -27,7 +27,7 @@
         <p:growl id="messages"/>
         <p:tooltip />
 
-        <p:menubar style="box-shadow: 0px 0px 25px 1px #{emprestimoBean.corBarraInadimplente};">
+        <p:menubar style="box-shadow: 0px 0px 25px 1px #{corBean.corBarra};">
 
             <p:menuitem value="Inicio" 
                         outcome="/${acesso}/inicio"
@@ -58,6 +58,10 @@
             <p:submenu label="Cópia">
                 <p:menuitem value="Remover" outcome="/${acesso}/remover_copia"
                             icon="ui-icon-close" title="remover uma regsitro de cópia"/>
+                <p:menuitem value="Limite de Cópia Geral do Mês" outcome="/${acesso}/limite_copia_geral_mes" 
+                            icon="ui-icon-pencil" title="alterar o limite de cópias geral do mês"/>
+                <p:menuitem value="Histórico Geral" outcome="/${acesso}/historico_copia_geral" 
+                            icon="ui-icon-document" title="historico de geral de cópias feitas"/>
                 <p:menuitem value="Relatório cópia" outcome="/${acesso}/relatorio_copia" 
                             icon="ui-icon-document" title="gerar um relatório de cópias"/>
             </p:submenu>

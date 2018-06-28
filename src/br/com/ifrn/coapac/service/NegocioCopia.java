@@ -1,11 +1,15 @@
 package br.com.ifrn.coapac.service;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import br.com.ifrn.coapac.dao.CopiaDAO;
 import br.com.ifrn.coapac.model.Copia;
@@ -167,4 +171,32 @@ public class NegocioCopia implements Serializable{
 			return null;
 		}
 	}
+	
+	public List<Object[]> buscarListaGrafico() {
+		try {
+			String jpql = "SELECT MONTH(c.data_copia) AS mes, SUM(c.quantidade) AS soma, YEAR(c.data_copia) AS ano FROM Copia c GROUP BY MONTH(c.data_copia), YEAR(c.data_copia) ORDER BY YEAR(c.data_copia) DESC, MONTH(c.data_copia) DESC";
+			Query query = em.createQuery(jpql);
+			query.setMaxResults(6);
+			int s = 0;
+			//--- Retornando --
+			@SuppressWarnings("unchecked")
+			List<Object[]> lista = query.getResultList();
+			return lista;
+		} catch (NumberFormatException | javax.persistence.NoResultException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/*@SuppressWarnings("deprecation")
+	public Double porcentagemCopiaMesGeral(){
+		Date dia1 = new Date();
+		dia1.setDate(1);
+		Date dia31 = new Date();
+		dia31.setDate(0);
+		int soma = buscarFiltro(dia1, dia31);
+		Integer limiteGeral = getLimite(3).getQuantidade();
+		
+		return (double) (soma/limiteGeral);
+	}*/
 }

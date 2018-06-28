@@ -1,0 +1,13 @@
+<ui:composition template="/WEB-INF/templates/template_servidor.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="conteudo">
+		<br/><br/><br/>
+		<center>
+			<p:chart type="line" model="#{chartView.lineModel2}" style="height:300px;width: 80%;"/>
+		</center>
+	</ui:define>
+</ui:composition>

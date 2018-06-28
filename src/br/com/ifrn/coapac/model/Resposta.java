@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Resposta implements Serializable, EntidadePersistivel {
-	private static final long serialVersionUID = 3846112981795091048L;
+	private static final long serialVersionUID = 7055609881465778179L;
 
 	@Id
     @GeneratedValue
@@ -29,10 +29,7 @@ public class Resposta implements Serializable, EntidadePersistivel {
     private String texto;
     
     @ManyToOne
-    private Usuario usuario_comentario;
-    
-    @ManyToOne
-    private Usuario usuario_concluida;
+    private Usuario usuario;
     
     @ManyToOne
     private Postagem postagem;
@@ -40,12 +37,6 @@ public class Resposta implements Serializable, EntidadePersistivel {
     @Column(nullable=false)
     @Temporal(value=TemporalType.DATE)
     private Date data_resposta;
-    
-    @Column(nullable=false)
-    @Temporal(value=TemporalType.DATE)
-    private Date data_conclusao;
-    
-    private boolean isConcluida;
     
     @Override
     public Integer getId() {
@@ -65,22 +56,6 @@ public class Resposta implements Serializable, EntidadePersistivel {
         this.texto = texto;
     }
 
-    public Usuario getUsuario_comentario() {
-        return usuario_comentario;
-    }
-
-    public void setUsuario_comentario(Usuario usuario_comentario) {
-        this.usuario_comentario = usuario_comentario;
-    }
-
-    public Usuario getUsuario_concluida() {
-        return usuario_concluida;
-    }
-
-    public void setUsuario_concluida(Usuario usuario_concluida) {
-        this.usuario_concluida = usuario_concluida;
-    }
-
     public Postagem getPostagem() {
         return postagem;
     }
@@ -97,20 +72,12 @@ public class Resposta implements Serializable, EntidadePersistivel {
         this.data_resposta = data_resposta;
     }
 
-    public Date getData_conclusao() {
-        return data_conclusao;
-    }
+	public Usuario getUsuario() {
+		return usuario;
+	}
 
-    public void setData_conclusao(Date data_conclusao) {
-        this.data_conclusao = data_conclusao;
-    }
-
-    public boolean isIsConcluida() {
-        return isConcluida;
-    }
-
-    public void setIsConcluida(boolean isConcluida) {
-        this.isConcluida = isConcluida;
-    }
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
     
 }

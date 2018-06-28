@@ -9,10 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
 
 import br.com.ifrn.coapac.model.Copia;
 import br.com.ifrn.coapac.model.Emprestimo;
@@ -97,21 +94,7 @@ public class UsuarioBean extends AbstractController implements Serializable {
     	EntityManager gerenciador = this.getEntityManager();
     	return new NegocioUsuario(gerenciador);
     }
-    
-    /**
-     * Possibilita o acesso ao EntityManager.
-     * @return EntityManager
-     */
-    private EntityManager getEntityManager(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
-        
-        return manager;
-    }
-    
-    
+
     /**
      * Mrétodo chamado para redirecionar para a prï¿½xima pï¿½gina da paginaï¿½ï¿½o,
      * referente ï¿½ listagem de publicaï¿½ï¿½es.

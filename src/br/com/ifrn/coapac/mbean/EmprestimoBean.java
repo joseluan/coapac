@@ -13,10 +13,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
 
 import br.com.ifrn.coapac.model.Emprestimo;
 import br.com.ifrn.coapac.model.Material;
@@ -91,14 +88,6 @@ public class EmprestimoBean extends AbstractController implements Serializable {
             return null;
         }
         return lista;
-    }
-
-    public String getCorBarraInadimplente() {
-        if (ValidatorUtil.isNotEmpty(getListaExpirado())) {
-            return "red";
-        } else {
-            return "green";
-        }
     }
 
     public boolean userIsInadimplente(Usuario usuario) {
@@ -256,19 +245,6 @@ public class EmprestimoBean extends AbstractController implements Serializable {
     public NegocioEmprestimo getMyNegocio(){
     	EntityManager gerenciador = this.getEntityManager();
     	return new NegocioEmprestimo(gerenciador);
-    }
-    
-    /**
-     * Possibilita o acesso ao EntityManager.
-     * @return EntityManager
-     */
-    private EntityManager getEntityManager(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
-        EntityManager manager = (EntityManager)request.getAttribute("EntityManager");
-        
-        return manager;
     }
 
     //GET e SET
